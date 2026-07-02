@@ -16,10 +16,15 @@ type configManager struct {
 func newConfigManager(
 	createFile bool,
 ) *configManager {
-	return &configManager{
+	res := &configManager{
 		createFile: createFile,
 		config:     ini.Empty(),
 	}
+	err := res.InitializeConfig()
+	if err != nil {
+		panic(err.Error())
+	}
+	return res
 }
 
 // InitializeConfig initialize the config file
@@ -40,8 +45,26 @@ func (cfg *configManager) InitializeConfig() error {
 		if err != nil {
 			return err
 		}
+		// Fill the empty fields
+		cfg.fillEmpty("LLM", "LLMModelName", "YOUR_MODEL_NAME")
+		cfg.fillEmpty("LLM", "LLMAPIKey", "YOUR_API_KEY")
+		cfg.fillEmpty("LLM", "LLMBaseURL", "YOUR_BASE_URL")
 	}
 	return nil
+}
+
+// fillEmpty fills the empty fields of config
+func (cfg *configManager) fillEmpty(
+	section string,
+	key string,
+	defaultValue string,
+) {
+	if !cfg.config.HasSection(section) || !cfg.config.Section(section).HasKey(key) {
+		cfg.config.Section(section).NewKey(key, defaultValue)
+		if cfg.createFile {
+			cfg.config.SaveTo(settings.Settings.GetIniFile())
+		}
+	}
 }
 
 // GetConfigString get a field in config file
@@ -50,11 +73,12 @@ func (cfg *configManager) GetConfigString(
 	key string,
 	defaultValue string,
 ) string {
-	if !cfg.config.HasSection(section) {
+	if !cfg.config.HasSection(section) ||
+		!cfg.config.Section(section).HasKey(key) {
 		cfg.config.Section(section).NewKey(key, defaultValue)
-		return defaultValue
-	}
-	if !cfg.config.Section(section).HasKey(key) {
+		if cfg.createFile {
+			cfg.config.SaveTo(settings.Settings.GetIniFile())
+		}
 		return defaultValue
 	}
 	return cfg.config.Section(section).Key(key).String()

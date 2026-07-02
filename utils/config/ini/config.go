@@ -7,5 +7,9 @@ type ConfigStruct struct {
 
 // GetLLMModelName gets the LLM Model Name
 func (cfg *ConfigStruct) GetLLMModelName() string {
-	return ""
+	return iniConfigManager.GetConfigString(
+		"LLM",
+		"LLMModelName",
+		"YOUR_MODEL_NAME",
+	)
 }
