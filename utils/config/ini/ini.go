@@ -1,12 +1,13 @@
 package ini
 
 import (
-	"gopkg.in/ini.v1"
+	"github.com/1Vewton/CuddlyBarnacleAgent/utils/logger"
 )
 
-// InitializeConfig initialize the config file
-func InitializeConfig() {
-	cfg := ini.Empty()
-	llmSettingsSection := cfg.Section("LLM")
-	llmSettingsSection.NewKey("LLMModelName", "YOUR_MODEL_NAME")
-}
+// IniConfig exports the config stored in the ini file
+var IniConfig *ConfigStruct = &ConfigStruct{}
+var iniConfigManager *configManager = &configManager{}
+var configLogger *logger.Logger = logger.NewLogger(
+	"Config",
+	nil,
+)

@@ -4,8 +4,8 @@ import (
 	"github.com/1Vewton/CuddlyBarnacleAgent/utils/logger"
 )
 
-// Config stores the configuration of this program.
-var Config *settings
+// Settings stores the basic settings of this program.
+var Settings *settings = &settings{}
 var configLogger *logger.Logger = logger.NewLogger(
 	"config",
 	nil,
