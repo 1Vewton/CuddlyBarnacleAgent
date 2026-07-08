@@ -6,17 +6,42 @@ import (
 
 // VectorDB controls a vector database
 type VectorDB struct {
-	dbPath string
-	db     *chromem.DB
+	dbPath         string
+	db             *chromem.DB
+	collectionName string
+	collection     *chromem.Collection
+	embeddingFunc  chromem.EmbeddingFunc
 }
 
 // NewVectorDB creates a new VectorDB
 func NewVectorDB(
 	dbPath string,
+	collectionName string,
 ) *VectorDB {
 	return &VectorDB{
-		dbPath: dbPath,
+		dbPath:         dbPath,
+		collectionName: collectionName,
 	}
 }
 
 // InitializeDB initializes a vector databse
+func (vDB *VectorDB) InitializeDB() error {
+	var errDB error
+	var errCollection error
+	vDB.db, errDB = chromem.NewPersistentDB(
+		vDB.dbPath,
+		true,
+	)
+	if errDB != nil {
+		return errDB
+	}
+	vDB.collection, errCollection = vDB.db.GetOrCreateCollection(
+		"knowledge_base",
+		nil,
+		nil,
+	)
+	if errCollection != nil {
+		return errCollection
+	}
+	return nil
+}

@@ -39,6 +39,10 @@ func (cfg *configManager) InitializeConfig() error {
 		llmSettingsSection.NewKey("LLMModelName", "YOUR_MODEL_NAME")
 		llmSettingsSection.NewKey("LLMAPIKey", "YOUR_API_KEY")
 		llmSettingsSection.NewKey("LLMBaseURL", "YOUR_BASE_URL")
+		EmbeddingSettingsSection := cfg.config.Section("Embedding")
+		EmbeddingSettingsSection.NewKey("EmbeddingModelName", "YOUR_MODEL_NAME")
+		EmbeddingSettingsSection.NewKey("EmbeddingModelAPIKey", "YOUR_API_KEY")
+		EmbeddingSettingsSection.NewKey("EmbeddingModelBaseURL", "YOUR_BASE_URL")
 	} else {
 		cfg.config, err = ini.Load(cfg.configFile)
 		if err != nil {
@@ -48,6 +52,9 @@ func (cfg *configManager) InitializeConfig() error {
 		cfg.fillEmpty("LLM", "LLMModelName", "YOUR_MODEL_NAME")
 		cfg.fillEmpty("LLM", "LLMAPIKey", "YOUR_API_KEY")
 		cfg.fillEmpty("LLM", "LLMBaseURL", "YOUR_BASE_URL")
+		cfg.fillEmpty("Embedding", "EmbeddingModelName", "YOUR_MODEL_NAME")
+		cfg.fillEmpty("Embedding", "EmbeddingModelAPIKey", "YOUR_API_KEY")
+		cfg.fillEmpty("Embedding", "EmbeddingModelBaseURL", "YOUR_BASE_URL")
 	}
 	if cfg.createFile {
 		cfg.config.SaveTo(cfg.configFile)

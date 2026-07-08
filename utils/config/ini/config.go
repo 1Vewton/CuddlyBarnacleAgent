@@ -40,3 +40,30 @@ func (cfg *ConfigStruct) GetLLMBaseURL() string {
 		"YOUR_API_KEY",
 	)
 }
+
+// GetEmbeddingModelName gets the model name for the embedding model
+func (cfg *ConfigStruct) GetEmbeddingModelName() string {
+	return cfg.cfg.GetConfigString(
+		"Embedding",
+		"EmbeddingModelName",
+		"YOUR_MODEL_NAME",
+	)
+}
+
+// GetEmbeddingModelAPIKey gets the api key for the embedding model
+func (cfg *ConfigStruct) GetEmbeddingModelAPIKey() string {
+	return cfg.cfg.GetConfigString(
+		"Embedding",
+		"EmbeddingModelAPIKey",
+		"YOUR_API_KEY",
+	)
+}
+
+// GetEmbeddingModelBaseURL gets the base url for the embedding model
+func (cfg *ConfigStruct) GetEmbeddingModelBaseURL() string {
+	return cfg.cfg.GetConfigString(
+		"Embedding",
+		"EmbeddingModelBaseURL",
+		"YOUR_BASE_URL",
+	)
+}
