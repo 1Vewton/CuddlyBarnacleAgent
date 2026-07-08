@@ -27,7 +27,7 @@ go.work.sum
 
 # configuration
 *.env
-*.ini
+conf.ini
 
 # Editor/IDE
 # .idea/

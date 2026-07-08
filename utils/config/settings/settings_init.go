@@ -4,13 +4,11 @@ package settings
 
 import (
 	"fmt"
-
-	"github.com/joho/godotenv"
 )
 
 // Read the .env file
 func init() {
-	err := godotenv.Load(".env")
+	err := Settings.Initialize(".env")
 	if err != nil {
 		configLogger.Error(
 			fmt.Sprintf(
