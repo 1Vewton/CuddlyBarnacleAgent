@@ -36,9 +36,9 @@ func (vDB *VectorDB) InitializeDB() error {
 		return errDB
 	}
 	vDB.collection, errCollection = vDB.db.GetOrCreateCollection(
-		"knowledge_base",
+		vDB.collectionName,
 		nil,
-		nil,
+		vDB.embeddingFunc,
 	)
 	if errCollection != nil {
 		return errCollection
