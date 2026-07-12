@@ -72,7 +72,33 @@ func TestFillEmpty(t *testing.T) {
 		"test1",
 		"test3",
 	)
+	t.Log(result)
 	if result != "test2" {
 		t.Errorf("Expected test2, got %s", result)
+	}
+}
+
+func TestSetConfig(t *testing.T) {
+	NewConfig := newConfigManager(
+		true,
+		"testdata/test.ini",
+	)
+	defer NewConfig.RemoveAll()
+	err := NewConfig.InitializeConfig()
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	NewConfig.SetConfigString(
+		"test",
+		"test",
+		"1",
+	)
+	result := NewConfig.GetConfigString(
+		"test",
+		"test",
+		"2",
+	)
+	if result != "1" {
+		t.Errorf("Expected 1, got %s", result)
 	}
 }

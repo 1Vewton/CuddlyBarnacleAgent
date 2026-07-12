@@ -68,7 +68,8 @@ func (cfg *configManager) fillEmpty(
 	key string,
 	defaultValue string,
 ) {
-	if !cfg.config.HasSection(section) || !cfg.config.Section(section).HasKey(key) {
+	if !cfg.config.HasSection(section) ||
+		!cfg.config.Section(section).HasKey(key) {
 		cfg.config.Section(section).NewKey(key, defaultValue)
 		if cfg.createFile {
 			cfg.config.SaveTo(cfg.configFile)
@@ -97,4 +98,21 @@ func (cfg *configManager) GetConfigString(
 		return defaultValue
 	}
 	return cfg.config.Section(section).Key(key).String()
+}
+
+// SetConfigString sets the value of a field
+func (cfg *configManager) SetConfigString(
+	section string,
+	key string,
+	value string,
+) {
+	if !cfg.config.HasSection(section) ||
+		!cfg.config.Section(section).HasKey(key) {
+		cfg.config.Section(section).NewKey(key, value)
+	} else {
+		cfg.config.Section(section).Key(key).SetValue(value)
+	}
+	if cfg.createFile {
+		cfg.config.SaveTo(cfg.configFile)
+	}
 }
