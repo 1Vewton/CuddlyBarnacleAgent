@@ -35,11 +35,11 @@ func NewEmbedder(
 
 // EmbeddingFunc embeds the text
 func (embedder *Embedder) EmbeddingFunc(
-	context context.Context,
+	ctx context.Context,
 	text string,
 ) ([]float32, error) {
 	res, err := embedder.client.Embeddings.New(
-		context,
+		ctx,
 		openai.EmbeddingNewParams{
 			Input: openai.EmbeddingNewParamsInputUnion{
 				OfString: openai.String(text),

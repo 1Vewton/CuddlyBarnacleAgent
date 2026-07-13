@@ -35,20 +35,24 @@ func (cfg *configManager) InitializeConfig() error {
 	if os.IsNotExist(err) {
 		configLogger.Info("Create new ini file")
 		// Create new ini
+		applicationSettingsSection := cfg.config.Section("Application")
+		applicationSettingsSection.NewKey("Language", "English")
+		applicationSettingsSection.NewKey("TextSplitMethod", Recursive.ToString())
 		llmSettingsSection := cfg.config.Section("LLM")
 		llmSettingsSection.NewKey("LLMModelName", "YOUR_MODEL_NAME")
 		llmSettingsSection.NewKey("LLMAPIKey", "YOUR_API_KEY")
 		llmSettingsSection.NewKey("LLMBaseURL", "YOUR_BASE_URL")
-		EmbeddingSettingsSection := cfg.config.Section("Embedding")
-		EmbeddingSettingsSection.NewKey("EmbeddingModelName", "YOUR_MODEL_NAME")
-		EmbeddingSettingsSection.NewKey("EmbeddingModelAPIKey", "YOUR_API_KEY")
-		EmbeddingSettingsSection.NewKey("EmbeddingModelBaseURL", "YOUR_BASE_URL")
+		embeddingSettingsSection := cfg.config.Section("Embedding")
+		embeddingSettingsSection.NewKey("EmbeddingModelName", "YOUR_MODEL_NAME")
+		embeddingSettingsSection.NewKey("EmbeddingModelAPIKey", "YOUR_API_KEY")
+		embeddingSettingsSection.NewKey("EmbeddingModelBaseURL", "YOUR_BASE_URL")
 	} else {
 		cfg.config, err = ini.Load(cfg.configFile)
 		if err != nil {
 			return err
 		}
 		// Fill the empty fields
+		cfg.fillEmpty("Application", "Language", "English")
 		cfg.fillEmpty("LLM", "LLMModelName", "YOUR_MODEL_NAME")
 		cfg.fillEmpty("LLM", "LLMAPIKey", "YOUR_API_KEY")
 		cfg.fillEmpty("LLM", "LLMBaseURL", "YOUR_BASE_URL")
