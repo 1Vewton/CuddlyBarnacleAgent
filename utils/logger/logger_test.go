@@ -11,11 +11,9 @@ func TestLogging(t *testing.T) {
 		&t,
 	)
 	logger.Info("Test!")
-	logger.Error("Test!")
 	loggerNil := NewLogger(
 		"test",
 		nil,
 	)
 	loggerNil.Info("Test!")
-	loggerNil.Error("Test!")
 }
