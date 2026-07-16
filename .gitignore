@@ -29,6 +29,10 @@ go.work.sum
 *.env
 conf.ini
 
+# Test database
+testdb/
+vectordb/testdb/
+
 # Editor/IDE
 # .idea/
 # .vscode/

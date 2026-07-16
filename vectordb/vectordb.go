@@ -1,6 +1,9 @@
 package vectordb
 
 import (
+	"context"
+	"runtime"
+
 	"github.com/philippgille/chromem-go"
 )
 
@@ -44,4 +47,17 @@ func (vDB *VectorDB) InitializeDB() error {
 		return errCollection
 	}
 	return nil
+}
+
+// UploadDocuments uploads chunked document list
+func (vDB *VectorDB) UploadDocuments(
+	ctx context.Context,
+	documentList []chromem.Document,
+) error {
+	err := vDB.collection.AddDocuments(
+		ctx,
+		documentList,
+		runtime.NumCPU(),
+	)
+	return err
 }
