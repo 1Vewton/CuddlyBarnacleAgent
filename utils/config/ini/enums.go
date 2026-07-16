@@ -4,6 +4,7 @@ package ini
 type TextSplittingMethod string
 
 const (
+	// Recursive defines the Recursive Splitting method
 	Recursive TextSplittingMethod = "Recursive"
 )
 

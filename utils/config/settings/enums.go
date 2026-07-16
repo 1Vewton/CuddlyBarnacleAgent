@@ -4,7 +4,9 @@ package settings
 type ApplicationMode string
 
 const (
+	// CMD mode runs the application in terminal.
 	CMD ApplicationMode = "CMD"
+	// GUI mode runs the application with GUI.
 	GUI ApplicationMode = "GUI"
 )
 
