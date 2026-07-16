@@ -27,3 +27,37 @@ func TestEnvSettingString(t *testing.T) {
 		t.Errorf("Expected s.ini, got %s", res)
 	}
 }
+
+// Test Application env getting
+func TestApplicationEnvGetting(t *testing.T) {
+	var tSetting1 *settings = &settings{}
+	t.Setenv("APPLICATION_MODE", "GUI")
+	result := tSetting1.GetApplicationMode()
+	if result != GUI {
+		t.Errorf(
+			"Expected %s, got %s",
+			GUI.ToString(),
+			result.ToString(),
+		)
+	}
+	t.Setenv("APPLICATION_MODE", "AAA")
+	var tSetting2 *settings = &settings{}
+	result = tSetting2.GetApplicationMode()
+	if result != CMD {
+		t.Errorf(
+			"Expected %s, got %s",
+			CMD.ToString(),
+			result.ToString(),
+		)
+	}
+	t.Setenv("APPLICATION_MODE", "CMD")
+	var tSetting3 *settings = &settings{}
+	result = tSetting3.GetApplicationMode()
+	if result != CMD {
+		t.Errorf(
+			"Expected %s, got %s",
+			CMD.ToString(),
+			result.ToString(),
+		)
+	}
+}

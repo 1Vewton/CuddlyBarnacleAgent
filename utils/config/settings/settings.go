@@ -6,7 +6,8 @@ import (
 
 // settings stores the config of the program
 type settings struct {
-	iniFile *string
+	iniFile         *string
+	applicationMode *string
 }
 
 // Initialize reads the env file setted
@@ -21,5 +22,16 @@ func (s *settings) GetIniFile() string {
 		"INI_FILE",
 		"conf.ini",
 		&s.iniFile,
+	)
+}
+
+// GetApplicationMode gets the mode of the application
+func (s *settings) GetApplicationMode() ApplicationMode {
+	return ToApplicationMode(
+		SetConfigString(
+			"APPLICATION_MODE",
+			"CMD",
+			&s.applicationMode,
+		),
 	)
 }
