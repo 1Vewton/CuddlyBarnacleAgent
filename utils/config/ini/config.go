@@ -2,9 +2,7 @@ package ini
 
 // ConfigStruct stores the configuration of the application
 type ConfigStruct struct {
-	llmModelName *string
-	LLMAPIKey    *string
-	cfg          *configManager
+	cfg *configManager
 }
 
 // NewConfigStruct creates a new ConfigStruct
@@ -65,5 +63,13 @@ func (cfg *ConfigStruct) GetEmbeddingModelBaseURL() string {
 		"Embedding",
 		"EmbeddingModelBaseURL",
 		"YOUR_BASE_URL",
+	)
+}
+
+func (cfg *ConfigStruct) GetEmbeddingChunkSize() (int, error) {
+	return cfg.cfg.GetConfigInt(
+		"Embedding",
+		"EmbeddingChunkSize",
+		200,
 	)
 }

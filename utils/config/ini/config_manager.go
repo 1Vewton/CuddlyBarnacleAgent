@@ -2,6 +2,7 @@ package ini
 
 import (
 	"os"
+	"strconv"
 
 	"gopkg.in/ini.v1"
 )
@@ -46,6 +47,7 @@ func (cfg *configManager) InitializeConfig() error {
 		embeddingSettingsSection.NewKey("EmbeddingModelName", "YOUR_MODEL_NAME")
 		embeddingSettingsSection.NewKey("EmbeddingModelAPIKey", "YOUR_API_KEY")
 		embeddingSettingsSection.NewKey("EmbeddingModelBaseURL", "YOUR_BASE_URL")
+		embeddingSettingsSection.NewKey("EmbeddingChunkSize", "200")
 	} else {
 		cfg.config, err = ini.Load(cfg.configFile)
 		if err != nil {
@@ -102,6 +104,26 @@ func (cfg *configManager) GetConfigString(
 		return defaultValue
 	}
 	return cfg.config.Section(section).Key(key).String()
+}
+
+// GetConfigInt get a Int field in config file
+func (cfg *configManager) GetConfigInt(
+	section string,
+	key string,
+	defaultValue int,
+) (int, error) {
+	if !cfg.config.HasSection(section) ||
+		!cfg.config.Section(section).HasKey(key) {
+		cfg.config.Section(section).NewKey(
+			key,
+			strconv.Itoa(defaultValue),
+		)
+		if cfg.createFile {
+			cfg.config.SaveTo(cfg.configFile)
+		}
+		return defaultValue, nil
+	}
+	return cfg.config.Section(section).Key(key).Int()
 }
 
 // SetConfigString sets the value of a field
