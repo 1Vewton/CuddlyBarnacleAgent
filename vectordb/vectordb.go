@@ -61,3 +61,18 @@ func (vDB *VectorDB) UploadDocuments(
 	)
 	return err
 }
+
+// Query queries the related texts
+func (vDB *VectorDB) Query(
+	ctx context.Context,
+	queryNum int,
+	text string,
+) ([]chromem.Result, error) {
+	return vDB.collection.Query(
+		ctx,
+		text,
+		queryNum,
+		nil,
+		nil,
+	)
+}

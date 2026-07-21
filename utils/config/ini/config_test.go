@@ -78,6 +78,7 @@ func TestFillEmpty(t *testing.T) {
 	}
 }
 
+// Test the config setting
 func TestSetConfig(t *testing.T) {
 	NewConfig := newConfigManager(
 		true,

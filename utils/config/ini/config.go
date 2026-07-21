@@ -1,6 +1,7 @@
 package ini
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/fatih/color"
@@ -27,6 +28,18 @@ func (cfg *ConfigStruct) GetLLMModelName() string {
 	)
 }
 
+// SetLLMModelName sets the LLM Model Name
+func (cfg *ConfigStruct) SetLLMModelName(
+	newModelName string,
+) error {
+	cfg.cfg.SetConfigString(
+		"LLM",
+		"LLMModelName",
+		newModelName,
+	)
+	return nil
+}
+
 // GetLLMAPIKey gets the LLM Model Name
 func (cfg *ConfigStruct) GetLLMAPIKey() string {
 	return cfg.cfg.GetConfigString(
@@ -34,6 +47,18 @@ func (cfg *ConfigStruct) GetLLMAPIKey() string {
 		"LLMAPIKey",
 		"YOUR_API_KEY",
 	)
+}
+
+// SetLLMAPIKey sets the API key of the LLM
+func (cfg *ConfigStruct) SetLLMAPIKey(
+	newAPIKey string,
+) error {
+	cfg.cfg.SetConfigString(
+		"LLM",
+		"LLMAPIKey",
+		newAPIKey,
+	)
+	return nil
 }
 
 // GetLLMBaseURL gets the base url for the llm
@@ -45,6 +70,18 @@ func (cfg *ConfigStruct) GetLLMBaseURL() string {
 	)
 }
 
+// SetLLMBaseURL sets the LLM Model Name
+func (cfg *ConfigStruct) SetLLMBaseURL(
+	newBaseURL string,
+) error {
+	cfg.cfg.SetConfigString(
+		"LLM",
+		"LLMBaseURL",
+		newBaseURL,
+	)
+	return nil
+}
+
 // GetEmbeddingModelName gets the model name for the embedding model
 func (cfg *ConfigStruct) GetEmbeddingModelName() string {
 	return cfg.cfg.GetConfigString(
@@ -52,6 +89,18 @@ func (cfg *ConfigStruct) GetEmbeddingModelName() string {
 		"EmbeddingModelName",
 		"YOUR_MODEL_NAME",
 	)
+}
+
+// SetEmbeddingModelName sets the Embedding Model Name
+func (cfg *ConfigStruct) SetEmbeddingModelName(
+	newModelName string,
+) error {
+	cfg.cfg.SetConfigString(
+		"Embedding",
+		"EmbeddingModelName",
+		newModelName,
+	)
+	return nil
 }
 
 // GetEmbeddingModelAPIKey gets the api key for the embedding model
@@ -63,6 +112,18 @@ func (cfg *ConfigStruct) GetEmbeddingModelAPIKey() string {
 	)
 }
 
+// SetEmbeddingModelAPIKey sets the API Key of the Embedding Model Name
+func (cfg *ConfigStruct) SetEmbeddingModelAPIKey(
+	newAPIKey string,
+) error {
+	cfg.cfg.SetConfigString(
+		"Embedding",
+		"EmbeddingModelAPIKey",
+		newAPIKey,
+	)
+	return nil
+}
+
 // GetEmbeddingModelBaseURL gets the base url for the embedding model
 func (cfg *ConfigStruct) GetEmbeddingModelBaseURL() string {
 	return cfg.cfg.GetConfigString(
@@ -70,6 +131,18 @@ func (cfg *ConfigStruct) GetEmbeddingModelBaseURL() string {
 		"EmbeddingModelBaseURL",
 		"YOUR_BASE_URL",
 	)
+}
+
+// SetEmbeddingModelBaseURL sets the base url of the Embedding Model Name
+func (cfg *ConfigStruct) SetEmbeddingModeBaseURL(
+	newBaseURL string,
+) error {
+	cfg.cfg.SetConfigString(
+		"Embedding",
+		"EmbeddingModelAPIKey",
+		newBaseURL,
+	)
+	return nil
 }
 
 // GetEmbeddingChunkSize gets the chunk size for textsplitter
@@ -110,4 +183,28 @@ func (cfg *ConfigStruct) ShowAllConfig() {
 		"Embedding Model Base URL: %s\n",
 		cfg.GetEmbeddingModelBaseURL(),
 	)
+}
+
+// SetAnyConfig sets the configuration without needing to call single function
+func (cfg *ConfigStruct) SetAnyConfig(
+	field string,
+	value string,
+) error {
+	switch field {
+	case "LLMModelName":
+		cfg.SetLLMModelName(value)
+	case "LLMAPIKey":
+		cfg.SetLLMAPIKey(value)
+	case "LLMBaseURL":
+		cfg.SetLLMBaseURL(value)
+	case "EmbeddingModelName":
+		cfg.SetEmbeddingModelName(value)
+	case "EmbeddingModelAPIKey":
+		cfg.SetEmbeddingModelAPIKey(value)
+	case "EmbeddingModelBaseURL":
+		cfg.SetEmbeddingModeBaseURL(value)
+	default:
+		return errors.New("No such field exists")
+	}
+	return nil
 }
