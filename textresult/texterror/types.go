@@ -1,4 +1,4 @@
 package texterror
 
-// The types of errors
+// ErrorTypes defines the types of errors
 type ErrorTypes string

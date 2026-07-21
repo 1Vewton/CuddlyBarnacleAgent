@@ -15,4 +15,9 @@ The following contents will show the name of fields of configuration and the def
 		`,
 	)
 	fmt.Println("LLMModelName: The name of the LLM model you want to use")
+	fmt.Println("LLMAPIKey: The API key of the LLM model you want to use")
+	fmt.Println("LLMBaseURL: The base url of the provider of the LLM you want to use")
+	fmt.Println("EmbeddingModelName: The name of the Embedding moddel you want to use")
+	fmt.Println("EmbeddingModelAPIKey: The API Key of the Embedding moddel you want to use")
+	fmt.Println("EmbeddingModelBaseURL: The base url of the provider of the Embedding moddel you want to use")
 }

@@ -134,7 +134,7 @@ func (cfg *ConfigStruct) GetEmbeddingModelBaseURL() string {
 }
 
 // SetEmbeddingModelBaseURL sets the base url of the Embedding Model Name
-func (cfg *ConfigStruct) SetEmbeddingModeBaseURL(
+func (cfg *ConfigStruct) SetEmbeddingModelBaseURL(
 	newBaseURL string,
 ) error {
 	cfg.cfg.SetConfigString(
@@ -202,7 +202,7 @@ func (cfg *ConfigStruct) SetAnyConfig(
 	case "EmbeddingModelAPIKey":
 		cfg.SetEmbeddingModelAPIKey(value)
 	case "EmbeddingModelBaseURL":
-		cfg.SetEmbeddingModeBaseURL(value)
+		cfg.SetEmbeddingModelBaseURL(value)
 	default:
 		return errors.New("No such field exists")
 	}

@@ -10,6 +10,7 @@ import (
 	"github.com/philippgille/chromem-go"
 )
 
+// Splitter defines the text splitter
 type Splitter struct {
 	chunkSize int
 	overlap   int
