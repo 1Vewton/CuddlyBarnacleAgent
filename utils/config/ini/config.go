@@ -1,5 +1,11 @@
 package ini
 
+import (
+	"fmt"
+
+	"github.com/fatih/color"
+)
+
 // ConfigStruct stores the configuration of the application
 type ConfigStruct struct {
 	cfg *configManager
@@ -34,8 +40,8 @@ func (cfg *ConfigStruct) GetLLMAPIKey() string {
 func (cfg *ConfigStruct) GetLLMBaseURL() string {
 	return cfg.cfg.GetConfigString(
 		"LLM",
-		"LLMAPIKey",
-		"YOUR_API_KEY",
+		"LLMBaseURL",
+		"YOUR_BASE_URL",
 	)
 }
 
@@ -66,10 +72,42 @@ func (cfg *ConfigStruct) GetEmbeddingModelBaseURL() string {
 	)
 }
 
+// GetEmbeddingChunkSize gets the chunk size for textsplitter
 func (cfg *ConfigStruct) GetEmbeddingChunkSize() (int, error) {
 	return cfg.cfg.GetConfigInt(
 		"Embedding",
 		"EmbeddingChunkSize",
 		200,
+	)
+}
+
+// ShowAllConfig shows all the config used in CLI
+func (cfg *ConfigStruct) ShowAllConfig() {
+	header := color.New(color.FgBlue, color.Bold)
+	header.Println("LLM")
+	fmt.Printf(
+		"LLM Model Name: %s\n",
+		cfg.GetLLMModelName(),
+	)
+	fmt.Printf(
+		"LLM API Key: %s\n",
+		cfg.GetLLMAPIKey(),
+	)
+	fmt.Printf(
+		"LLM Base URL: %s\n",
+		cfg.GetLLMBaseURL(),
+	)
+	header.Println("Embedding")
+	fmt.Printf(
+		"Embedding Model Name: %s\n",
+		cfg.GetEmbeddingModelName(),
+	)
+	fmt.Printf(
+		"Embedding Model API Key: %s\n",
+		cfg.GetEmbeddingModelAPIKey(),
+	)
+	fmt.Printf(
+		"Embedding Model Base URL: %s\n",
+		cfg.GetEmbeddingModelBaseURL(),
 	)
 }

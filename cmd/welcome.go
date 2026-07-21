@@ -1,12 +1,13 @@
 package cmd
 
 import (
-	"fmt"
+	"github.com/fatih/color"
 )
 
 // Welcome text
 func Welcome() {
-	fmt.Println(
+	printer := color.New(color.FgBlue, color.Bold)
+	printer.Println(
 		`
    ____   ____       _    
   / ___| | __ )     / \   
