@@ -6,8 +6,9 @@ import (
 
 // settings stores the config of the program
 type settings struct {
-	iniFile         *string
-	applicationMode *string
+	iniFile           *string
+	applicationMode   *string
+	knowledgeBasePath *string
 }
 
 // Initialize reads the env file setted
@@ -33,5 +34,14 @@ func (s *settings) GetApplicationMode() ApplicationMode {
 			"CMD",
 			&s.applicationMode,
 		),
+	)
+}
+
+// GetKnowledgeBasePath gets the path of the knowledgebase
+func (s *settings) GetKnowledgeBasePath() string {
+	return SetConfigString(
+		"KNOWLEDGE_BASE_PATH",
+		"./knowledgebase",
+		&s.knowledgeBasePath,
 	)
 }

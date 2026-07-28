@@ -4,7 +4,14 @@ import (
 	"context"
 	"runtime"
 
+	"github.com/1Vewton/CuddlyBarnacleAgent/utils/config/settings"
 	"github.com/philippgille/chromem-go"
+)
+
+// VectorDataBase
+var VectorDataBase = NewVectorDB(
+	settings.Settings.GetKnowledgeBasePath(),
+	"knowledgeBase",
 )
 
 // VectorDB controls a vector database

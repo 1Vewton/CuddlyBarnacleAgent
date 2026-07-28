@@ -4,7 +4,13 @@ import (
 	"fyne.io/fyne/v2/app"
 	"github.com/1Vewton/CuddlyBarnacleAgent/cmd"
 	"github.com/1Vewton/CuddlyBarnacleAgent/utils/config/settings"
+	"github.com/1Vewton/CuddlyBarnacleAgent/vectordb"
 )
+
+// Initialize
+func init() {
+	vectordb.VectorDataBase.InitializeDB()
+}
 
 // Main program
 func main() {
