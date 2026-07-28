@@ -8,7 +8,7 @@ import (
 	"github.com/philippgille/chromem-go"
 )
 
-// VectorDataBase
+// VectorDataBase provides the public knowledge base entrypoint
 var VectorDataBase = NewVectorDB(
 	settings.Settings.GetKnowledgeBasePath(),
 	"knowledgeBase",
