@@ -1,7 +1,6 @@
 package ini
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/fatih/color"
@@ -204,7 +203,10 @@ func (cfg *ConfigStruct) SetAnyConfig(
 	case "EmbeddingModelBaseURL":
 		cfg.SetEmbeddingModelBaseURL(value)
 	default:
-		return errors.New("No such field exists")
+		return fmt.Errorf(
+			"No such field %s exists",
+			field,
+		)
 	}
 	return nil
 }

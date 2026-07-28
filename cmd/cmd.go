@@ -12,7 +12,10 @@ var cmdLogger *logger.Logger = logger.NewLogger(
 )
 
 func init() {
-	mainCMD.AddCommand(showConfigCMD)
+	mainCMD.AddCommand(
+		showConfigCMD,
+		setConfigCMD,
+	)
 }
 
 // Execute executes the command
