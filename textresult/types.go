@@ -1,4 +1,4 @@
-package texterror
+package textresult
 
 // ErrorTypes defines the types of errors
 type ErrorTypes string
