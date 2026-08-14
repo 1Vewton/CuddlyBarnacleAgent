@@ -11,7 +11,7 @@ import (
 type Tips struct {
 	sync.RWMutex
 	path string
-	Data []string
+	Data []string `json:"data"`
 }
 
 // NewTips creates new tips
@@ -81,7 +81,7 @@ func (tips *Tips) ReturnTipsThroughIdx(
 	for i, data := range tips.Data {
 		if idxClone[currentIdx] == i {
 			result = append(result, data)
-			currentIdx += 1
+			currentIdx++
 			if currentIdx >= len(idxClone) {
 				break
 			}
