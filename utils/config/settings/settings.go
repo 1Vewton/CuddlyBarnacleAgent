@@ -9,6 +9,7 @@ type settings struct {
 	iniFile           *string
 	applicationMode   *string
 	knowledgeBasePath *string
+	tipsPath          *string
 }
 
 // Initialize reads the env file setted
@@ -43,5 +44,14 @@ func (s *settings) GetKnowledgeBasePath() string {
 		"KNOWLEDGE_BASE_PATH",
 		"./knowledgebase",
 		&s.knowledgeBasePath,
+	)
+}
+
+// GetTipsPath gets the path of the tips
+func (s *settings) GetTipsPath() string {
+	return SetConfigString(
+		"TIPS_PATH",
+		"tips.json",
+		&s.tipsPath,
 	)
 }
