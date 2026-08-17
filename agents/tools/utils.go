@@ -75,8 +75,8 @@ func CreateToolParamList(
 	return result, nil
 }
 
-// CreateParamList creates description for a list
-func CreateParamList(
+// CreateListParam creates description for a list
+func CreateListParam(
 	subparams map[string]*schema.ParameterInfo,
 	subparamsDescription string,
 	required bool,
