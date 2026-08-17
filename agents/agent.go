@@ -10,7 +10,8 @@ import (
 
 // Agent defines the data structure for storing agent data
 type Agent struct {
-	einoAgent *adk.ChatModelAgent
+	einoAgent    *adk.ChatModelAgent
+	systemPrompt string
 }
 
 // NewAgent creates new agent
@@ -20,6 +21,7 @@ func NewAgent(
 	name string,
 	job string,
 	instruction string,
+	systemPrompt string,
 ) (*Agent, error) {
 	chatModelAgent, errCreateAgent := adk.NewChatModelAgent(
 		ctx,
@@ -37,6 +39,7 @@ func NewAgent(
 		return nil, errCreateAgent
 	}
 	return &Agent{
-		einoAgent: chatModelAgent,
+		einoAgent:    chatModelAgent,
+		systemPrompt: systemPrompt,
 	}, nil
 }

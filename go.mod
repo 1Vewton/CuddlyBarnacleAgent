@@ -9,6 +9,7 @@ require github.com/joho/godotenv v1.5.1
 require (
 	fyne.io/fyne/v2 v2.8.0
 	github.com/1Vewton/textsplitter v1.0.0
+	github.com/cloudwego/eino v0.7.13
 	github.com/cloudwego/eino-ext/components/model/openai v0.1.13
 	github.com/fatih/color v1.19.0
 	github.com/google/uuid v1.6.0
@@ -28,7 +29,6 @@ require (
 	github.com/bytedance/sonic/loader v0.3.0 // indirect
 	github.com/clipperhouse/uax29/v2 v2.2.0 // indirect
 	github.com/cloudwego/base64x v0.1.6 // indirect
-	github.com/cloudwego/eino v0.7.13 // indirect
 	github.com/cloudwego/eino-ext/libs/acl/openai v0.1.17 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
