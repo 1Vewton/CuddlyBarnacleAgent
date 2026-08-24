@@ -1,7 +1,7 @@
 package ini
 
 import (
-	"github.com/1Vewton/CuddlyBarnacleAgent/utils/logger"
+	"github.com/1Vewton/CuddlyBarnacleAgent/pkg/logger"
 )
 
 // IniConfig exports the config stored in the ini file

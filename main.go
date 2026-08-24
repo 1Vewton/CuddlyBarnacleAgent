@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/1Vewton/CuddlyBarnacleAgent/data/vectordb"
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/vectordb"
 )
 
 // Initialize

@@ -3,7 +3,7 @@ package cmd
 import (
 	"os"
 
-	"github.com/1Vewton/CuddlyBarnacleAgent/utils/logger"
+	"github.com/1Vewton/CuddlyBarnacleAgent/pkg/logger"
 )
 
 var cmdLogger *logger.Logger = logger.NewLogger(

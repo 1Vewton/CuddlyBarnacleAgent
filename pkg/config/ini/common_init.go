@@ -3,7 +3,7 @@
 package ini
 
 import (
-	"github.com/1Vewton/CuddlyBarnacleAgent/utils/config/settings"
+	"github.com/1Vewton/CuddlyBarnacleAgent/pkg/config/settings"
 )
 
 func init() {

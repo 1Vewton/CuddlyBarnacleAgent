@@ -1,7 +1,7 @@
 package settings
 
 import (
-	"github.com/1Vewton/CuddlyBarnacleAgent/utils/logger"
+	"github.com/1Vewton/CuddlyBarnacleAgent/pkg/logger"
 )
 
 // Settings stores the basic settings of this program.

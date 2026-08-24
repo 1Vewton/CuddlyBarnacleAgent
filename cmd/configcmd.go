@@ -1,9 +1,9 @@
 package cmd
 
 import (
+	"github.com/1Vewton/CuddlyBarnacleAgent/cmd/cmdinterface"
 	"github.com/1Vewton/CuddlyBarnacleAgent/cmd/tips"
-	"github.com/1Vewton/CuddlyBarnacleAgent/utils"
-	"github.com/1Vewton/CuddlyBarnacleAgent/utils/config/ini"
+	"github.com/1Vewton/CuddlyBarnacleAgent/pkg/config/ini"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -39,7 +39,7 @@ The field name and the new value should be separated by space when inputting.
 		// Input the field name and new value
 		var targetField string
 		var newValue string
-		err := utils.ReadLine(
+		err := cmdinterface.ReadLine(
 			"Input the field you want to change and the new value:",
 			&targetField,
 			&newValue,

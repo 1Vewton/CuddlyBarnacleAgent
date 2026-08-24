@@ -4,7 +4,7 @@ import (
 	"context"
 	"runtime"
 
-	"github.com/1Vewton/CuddlyBarnacleAgent/utils/config/settings"
+	"github.com/1Vewton/CuddlyBarnacleAgent/pkg/config/settings"
 	"github.com/philippgille/chromem-go"
 )
 

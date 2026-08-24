@@ -3,7 +3,7 @@ package vectordb
 import (
 	"context"
 
-	"github.com/1Vewton/CuddlyBarnacleAgent/utils/config/ini"
+	"github.com/1Vewton/CuddlyBarnacleAgent/pkg/config/ini"
 	"github.com/1Vewton/textsplitter"
 	"github.com/1Vewton/textsplitter/fixedsplitter"
 	"github.com/google/uuid"
