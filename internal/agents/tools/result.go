@@ -7,8 +7,8 @@ import (
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/textresult"
 )
 
-// GetResult gets the result
-func GetResult(
+// ProvideResult gets the result
+func ProvideResult(
 	ctx context.Context,
 	argumentsInJSON string,
 ) (string, error) {

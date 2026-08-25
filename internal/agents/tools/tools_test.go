@@ -30,11 +30,27 @@ func TestCreateToolParamList(
 ) {
 	resultData := textresult.TextError{}
 	paramPrompts := prompts.TextResultParam
-	_, errCreate := CreateToolParams(
+	data, errCreate := CreateToolParams(
 		paramPrompts,
 		resultData,
 	)
 	if errCreate != nil {
 		t.Error(errCreate)
+	}
+	_, ok := data["Line"]
+	if !ok {
+		t.Error("Expected to have Line field")
+	}
+	_, ok = data["Level"]
+	if !ok {
+		t.Error("Expected to have Level field")
+	}
+	_, ok = data["Type"]
+	if !ok {
+		t.Error("Expected to have Type field")
+	}
+	_, ok = data["Reason"]
+	if !ok {
+		t.Error("Expected to have Reason field")
 	}
 }
