@@ -1,6 +1,6 @@
 package textresult
 
-// ErrorTypes defines the types of errors
+// ErrorType defines the types of errors
 type ErrorType int
 
 const (

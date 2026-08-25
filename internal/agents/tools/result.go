@@ -43,7 +43,7 @@ func (t *ProvideResultTool) Info(
 	}, nil
 }
 
-// ProvideResult gets the result
+// InvokableRun runs the provides result tool
 func (t *ProvideResultTool) InvokableRun(
 	ctx context.Context,
 	argumentsInJSON string,
