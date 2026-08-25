@@ -7,3 +7,8 @@ type TextError struct {
 	Line   int
 	Reason string
 }
+
+// ListResult defines the list of errors
+type ListResult struct {
+	Array []TextError
+}

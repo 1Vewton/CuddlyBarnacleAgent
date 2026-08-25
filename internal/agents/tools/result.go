@@ -4,11 +4,47 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/prompts"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/textresult"
+	"github.com/cloudwego/eino/schema"
 )
 
+// ProvideResultTool provides result
+type ProvideResultTool struct {
+	taskName string
+}
+
+// Info gives information for this tool
+func (t *ProvideResultTool) Info(
+	ctx context.Context,
+) (*schema.ToolInfo, error) {
+	expSchema := textresult.TextError{}
+	singleParamSchema, err := CreateToolParams(
+		prompts.TextResultParam,
+		expSchema,
+	)
+	if err != nil {
+		return nil, err
+	}
+	paramSchema := CreateListParam(
+		singleParamSchema,
+		prompts.TextErrorDescription,
+		true,
+		prompts.TextErrorArrayDescription,
+	)
+	return &schema.ToolInfo{
+		Name: "provide_result",
+		Desc: "Provides result to the user",
+		ParamsOneOf: schema.NewParamsOneOfByParams(
+			map[string]*schema.ParameterInfo{
+				"Array": paramSchema,
+			},
+		),
+	}, nil
+}
+
 // ProvideResult gets the result
-func ProvideResult(
+func (t *ProvideResultTool) InvokableRun(
 	ctx context.Context,
 	argumentsInJSON string,
 ) (string, error) {
