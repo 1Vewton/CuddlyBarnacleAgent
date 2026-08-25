@@ -6,12 +6,22 @@ import (
 
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/prompts"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/textresult"
+	"github.com/cloudwego/eino/components/tool"
 	"github.com/cloudwego/eino/schema"
 )
 
 // ProvideResultTool provides result
 type ProvideResultTool struct {
 	taskName string
+}
+
+// NewProvideResultTool creates new ProvideResultTool
+func NewProvideResultTool(
+	taskName string,
+) *ProvideResultTool {
+	return &ProvideResultTool{
+		taskName: taskName,
+	}
 }
 
 // Info gives information for this tool
@@ -52,6 +62,7 @@ func (t *ProvideResultTool) Info(
 func (t *ProvideResultTool) InvokableRun(
 	ctx context.Context,
 	argumentsInJSON string,
+	opts ...tool.Option,
 ) (string, error) {
 	var inputs []textresult.TextError
 	errUnmarshal := json.Unmarshal(

@@ -6,6 +6,7 @@ import (
 
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/prompts"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/textresult"
+	"github.com/cloudwego/eino/components/tool"
 	"github.com/cloudwego/eino/schema"
 )
 
@@ -52,5 +53,14 @@ func TestCreateToolParamList(
 	_, ok = data["Reason"]
 	if !ok {
 		t.Error("Expected to have Reason field")
+	}
+}
+
+// TestInterface tests whether it implements tool interfacce
+func TestInterface(t *testing.T) {
+	var resultToolTest any = NewProvideResultTool("114514")
+	_, ok := resultToolTest.(tool.InvokableTool)
+	if !ok {
+		t.Error("ProvideResultTool does not implement invokable tool")
 	}
 }
