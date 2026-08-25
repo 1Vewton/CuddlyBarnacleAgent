@@ -13,3 +13,11 @@ type ListResult struct {
 	Array                 []TextError
 	OverWriteOriginalData bool
 }
+
+// StoredTextError defines the error stored in the program
+type StoredTextError struct {
+	Level  Levels
+	Type   ErrorType
+	Line   int
+	Reason string
+}

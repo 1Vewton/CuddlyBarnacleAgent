@@ -37,18 +37,25 @@ func (sc *Splitter) GetSplitter() textsplitter.TextSplitter {
 func (sc *Splitter) SplitDoc(
 	ctx context.Context,
 	document string,
+	documentTitle string,
+	documentID string,
 ) ([]chromem.Document, error) {
 	result, err := sc.GetSplitter().SplitText(ctx, document)
 	if err != nil {
 		return nil, err
 	}
 	var documents []chromem.Document = []chromem.Document{}
+	metadata := map[string]string{
+		"title": documentTitle,
+		"id":    documentID,
+	}
 	for _, i := range result {
 		documents = append(
 			documents,
 			chromem.Document{
-				Content: i,
-				ID:      uuid.NewString(),
+				Content:  i,
+				ID:       uuid.NewString(),
+				Metadata: metadata,
 			},
 		)
 	}

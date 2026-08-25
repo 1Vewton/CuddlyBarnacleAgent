@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/prompts"
-	"github.com/1Vewton/CuddlyBarnacleAgent/internal/textresult"
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/textresult"
 	"github.com/cloudwego/eino/components/tool"
 	"github.com/cloudwego/eino/schema"
 )
