@@ -38,6 +38,11 @@ func (t *ProvideResultTool) Info(
 		ParamsOneOf: schema.NewParamsOneOfByParams(
 			map[string]*schema.ParameterInfo{
 				"Array": paramSchema,
+				"OverWriteOriginalData": NewParam(
+					schema.Boolean,
+					prompts.OverwriteDataDescription,
+					true,
+				),
 			},
 		),
 	}, nil

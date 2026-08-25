@@ -10,5 +10,6 @@ type TextError struct {
 
 // ListResult defines the list of errors
 type ListResult struct {
-	Array []TextError
+	Array                 []TextError
+	OverWriteOriginalData bool
 }
