@@ -32,20 +32,28 @@ func NewSingleAgentRecord() *SingleAgentRecord {
 func (record *SingleAgentRecord) NewCall() {
 	record.Lock()
 	defer record.Unlock()
-	record.TotalCalls += 1
+	record.TotalCalls++
 }
 
 // CallSuccess records that the call for the tool is successed
 func (record *SingleAgentRecord) CallSuccess() {
 	record.Lock()
 	defer record.Unlock()
-	record.TotalSuccess += 1
+	record.TotalSuccess++
 }
 
 // GetTotalCalls gets total calls
 func (record *SingleAgentRecord) GetTotalCalls() int {
-	record.Lock()
-	defer record.Unlock()
+	record.RLock()
+	defer record.RUnlock()
 	result := record.TotalCalls
+	return result
+}
+
+// GetSuccessCalls gets success calls
+func (record *SingleAgentRecord) GetSuccessCalls() int {
+	record.RLock()
+	defer record.RUnlock()
+	result := record.TotalSuccess
 	return result
 }
