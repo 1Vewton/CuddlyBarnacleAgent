@@ -1,4 +1,4 @@
-package agents
+package agenttypes
 
 // AgentType defines the type of agent
 type AgentType int

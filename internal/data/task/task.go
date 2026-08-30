@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents"
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/agenttypes"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/textresult"
 	"github.com/google/uuid"
 )
@@ -54,7 +54,7 @@ func (task *Task) AddMultipleProblems(
 
 // GetAllProblemsFor gets the all tasks proposed by certain agent
 func (task *Task) GetAllProblemsFor(
-	agentType agents.AgentType,
+	agentType agenttypes.AgentType,
 ) []*textresult.StoredTextError {
 	task.RLock()
 	defer task.RUnlock()

@@ -3,7 +3,7 @@ package task
 import (
 	"testing"
 
-	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents"
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/agenttypes"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/textresult"
 )
 
@@ -15,19 +15,19 @@ func TestTask(t *testing.T) {
 			Type:     textresult.UncategorizedError,
 			Line:     114514,
 			Reason:   "1919810",
-			Proposer: agents.FactualCheck,
+			Proposer: agenttypes.FactualCheck,
 		},
 		{
 			Level:    textresult.Error,
 			Type:     textresult.UncategorizedError,
 			Line:     1919810,
 			Reason:   "1919810",
-			Proposer: agents.GrammaticalCheck,
+			Proposer: agenttypes.GrammaticalCheck,
 		},
 	}
 	newTask := NewTask("TestTask")
 	newTask.AddMultipleProblems(testData)
-	result := newTask.GetAllProblemsFor(agents.GrammaticalCheck)
+	result := newTask.GetAllProblemsFor(agenttypes.GrammaticalCheck)
 	length := len(result)
 	if length != 1 {
 		t.Errorf(

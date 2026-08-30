@@ -43,7 +43,7 @@ func (t *ProvideResultTool) Info(
 		prompts.TextErrorArrayDescription,
 	)
 	return &schema.ToolInfo{
-		Name: "provide_result",
+		Name: prompts.ProvideResultToolName,
 		Desc: "Provides result to the user",
 		ParamsOneOf: schema.NewParamsOneOfByParams(
 			map[string]*schema.ParameterInfo{

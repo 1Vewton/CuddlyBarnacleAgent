@@ -12,13 +12,15 @@ import (
 type Agent struct {
 	einoAgent    *adk.ChatModelAgent
 	systemPrompt string
+	ModelName    string
 }
 
 // NewAgent creates new agent
 func NewAgent(
 	ctx context.Context,
 	baseModel *openai.ChatModel,
-	name string,
+	modelName string,
+	agentName string,
 	job string,
 	instruction string,
 	systemPrompt string,
@@ -26,7 +28,7 @@ func NewAgent(
 	chatModelAgent, errCreateAgent := adk.NewChatModelAgent(
 		ctx,
 		&adk.ChatModelAgentConfig{
-			Name: name,
+			Name: agentName,
 			Description: fmt.Sprintf(
 				"The agent that is responsible for %s",
 				job,
@@ -41,5 +43,6 @@ func NewAgent(
 	return &Agent{
 		einoAgent:    chatModelAgent,
 		systemPrompt: systemPrompt,
+		ModelName:    modelName,
 	}, nil
 }

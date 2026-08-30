@@ -1,7 +1,7 @@
 package textresult
 
 import (
-	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents"
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/agenttypes"
 )
 
 // TextError defines an error occurs in the text, including logic and other errors
@@ -24,13 +24,13 @@ type StoredTextError struct {
 	Type     ErrorType
 	Line     int
 	Reason   string
-	Proposer agents.AgentType
+	Proposer agenttypes.AgentType
 }
 
 // FromRawToProcessed process the basic text error
 func FromRawToProcessed(
 	rawData TextError,
-	proposer agents.AgentType,
+	proposer agenttypes.AgentType,
 ) (*StoredTextError, error) {
 	level, err := ToLevels(rawData.Level)
 	if err != nil {
@@ -48,7 +48,7 @@ func FromRawToProcessed(
 // MultipleRawToProcessed process mutilple text errors
 func MultipleRawToProcessed(
 	rawDatas []TextError,
-	proposer agents.AgentType,
+	proposer agenttypes.AgentType,
 ) ([]*StoredTextError, error) {
 	result := []*StoredTextError{}
 	for _, data := range rawDatas {
