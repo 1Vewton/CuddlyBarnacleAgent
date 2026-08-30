@@ -1,6 +1,7 @@
 package textresult
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -26,7 +27,9 @@ func (level Levels) ToInt() (int, error) {
 	case Error:
 		return 1, nil
 	case NotSupported:
-		return -1, nil
+		return -1, errors.New(
+			"not supported",
+		)
 	default:
 		return -1, fmt.Errorf(
 			"%d does not supported",
@@ -45,7 +48,9 @@ func ToLevels(
 	case 1:
 		return Error, nil
 	case -1:
-		return NotSupported, nil
+		return NotSupported, errors.New(
+			"not supported",
+		)
 	default:
 		return NotSupported, fmt.Errorf(
 			"Level %d not invalid, 0: Warning, 1: Error",

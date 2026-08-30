@@ -4,9 +4,17 @@ package textresult
 type ErrorType int
 
 const (
-	// UncategorizedError defines the error that is not categorized
+	// UncategorizedError defines the error that is not categorized.
+	// 0
 	UncategorizedError ErrorType = iota
 )
+
+// GetAllPossibleErrors gets all the possible types of errors
+func GetAllPossibleErrors() []ErrorType {
+	return []ErrorType{
+		UncategorizedError,
+	}
+}
 
 // ToErrorType converts integer to error
 func ToErrorType(data int) ErrorType {
@@ -15,5 +23,25 @@ func ToErrorType(data int) ErrorType {
 		return UncategorizedError
 	default:
 		return UncategorizedError
+	}
+}
+
+// ToInt converts error type to integer
+func (errorType ErrorType) ToInt() int {
+	switch errorType {
+	case UncategorizedError:
+		return 0
+	default:
+		return 0
+	}
+}
+
+// ToString converts error type to string
+func (errorType ErrorType) ToString() string {
+	switch errorType {
+	case UncategorizedError:
+		return "UncategorizedError"
+	default:
+		return "UncategorizedError"
 	}
 }
