@@ -8,6 +8,7 @@ import (
 
 // TestConvert tests the converting
 func TestConvert(t *testing.T) {
+	t.Parallel()
 	testData := []TextError{
 		{
 			0,

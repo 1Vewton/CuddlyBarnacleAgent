@@ -9,6 +9,7 @@ import (
 
 // TestTask tests the functions related to
 func TestTask(t *testing.T) {
+	t.Parallel()
 	testData := []*textresult.StoredTextError{
 		{
 			Level:    textresult.Error,
@@ -25,7 +26,7 @@ func TestTask(t *testing.T) {
 			Proposer: agenttypes.GrammaticalCheck,
 		},
 	}
-	newTask := NewTask("TestTask")
+	newTask := NewTask("TestTask", "114514")
 	newTask.AddMultipleProblems(testData)
 	result := newTask.GetAllProblemsFor(agenttypes.GrammaticalCheck)
 	length := len(result)

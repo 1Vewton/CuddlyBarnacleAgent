@@ -6,6 +6,7 @@ import (
 
 // Test the logging
 func TestLogging(t *testing.T) {
+	t.Parallel()
 	logger := NewLogger(
 		"test",
 		&t,

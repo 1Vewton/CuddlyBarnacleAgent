@@ -1,6 +1,7 @@
 package monitor
 
 import (
+	"errors"
 	"sync"
 )
 
@@ -11,12 +12,44 @@ type FailureRecord struct {
 	ToolName   string
 }
 
+// NewFailureRecord creates new failure record
+func NewFailureRecord(
+	reason string,
+	agentInput string,
+	toolName string,
+) *FailureRecord {
+	return &FailureRecord{
+		Reason:     reason,
+		AgentInput: agentInput,
+		ToolName:   toolName,
+	}
+}
+
+// NewFailureRecordFromError creates new failure record from error
+func NewFailureRecordFromError(
+	errInfo error,
+	agentInput string,
+	toolName string,
+) (*FailureRecord, error) {
+	if errInfo == nil {
+		return nil, errors.New(
+			"The error passed cannot be nil",
+		)
+	}
+	record := NewFailureRecord(
+		errInfo.Error(),
+		agentInput,
+		toolName,
+	)
+	return record, nil
+}
+
 // SingleAgentRecord defines the recorded data for single agent
 type SingleAgentRecord struct {
 	sync.RWMutex
 	TotalCalls   int
 	TotalSuccess int
-	Failures     []FailureRecord
+	Failures     []*FailureRecord
 }
 
 // NewSingleAgentRecord creates new Record
@@ -24,7 +57,7 @@ func NewSingleAgentRecord() *SingleAgentRecord {
 	return &SingleAgentRecord{
 		TotalCalls:   0,
 		TotalSuccess: 0,
-		Failures:     []FailureRecord{},
+		Failures:     []*FailureRecord{},
 	}
 }
 

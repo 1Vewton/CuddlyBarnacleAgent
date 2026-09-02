@@ -1,6 +1,9 @@
 package task
 
 import (
+	"encoding/json"
+	"fmt"
+	"os"
 	"sync"
 	"time"
 
@@ -12,6 +15,7 @@ import (
 // Task defines task for checking errors
 type Task struct {
 	sync.RWMutex
+	TaskName   string
 	TaskID     string
 	ArticleID  string
 	CreateTime time.Time
@@ -21,16 +25,66 @@ type Task struct {
 
 // NewTask creates new task
 func NewTask(
+	taskName string,
 	articleID string,
 ) *Task {
 	taskID := uuid.NewString()
 	return &Task{
+		TaskName:   taskName,
 		TaskID:     taskID,
 		ArticleID:  articleID,
 		CreateTime: time.Now(),
 		EditTime:   time.Now(),
 		Problems:   []*textresult.StoredTextError{},
 	}
+}
+
+// NewTaskFromFile creates new task from json file
+func NewTaskFromFile(
+	fileName string,
+) (*Task, error) {
+	newTask := &Task{}
+	data, err := os.ReadFile(fileName)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(
+		data,
+		&newTask,
+	)
+	return newTask, err
+}
+
+// GetTaskName generates task name
+func (task *Task) GetTaskName(
+	taskDir string,
+) string {
+	return fmt.Sprintf(
+		"%s/%s_%d_%s.json",
+		taskDir,
+		task.ArticleID,
+		task.CreateTime.Nanosecond(),
+		task.ArticleID,
+	)
+}
+
+// SaveFile saves the task to json file
+func (task *Task) SaveFile(
+	taskDir string,
+) error {
+	task.RLock()
+	defer task.RUnlock()
+	data, err := json.Marshal(task)
+	if err != nil {
+		return err
+	}
+	fileName := task.GetTaskName(taskDir)
+	err = os.WriteFile(
+		fileName,
+		data,
+		0644,
+	)
+	return err
 }
 
 // AddSingleProblem adds single problem to the Task

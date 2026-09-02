@@ -14,6 +14,7 @@ type TestStruct struct {
 func TestGetField(
 	t *testing.T,
 ) {
+	t.Parallel()
 	newTestStruct := TestStruct{
 		Field1: "abc",
 	}

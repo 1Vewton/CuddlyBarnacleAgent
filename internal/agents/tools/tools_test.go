@@ -14,6 +14,7 @@ import (
 func TestReflectTypeToEinoType(
 	t *testing.T,
 ) {
+	t.Parallel()
 	stringType := reflect.String
 	einoStringType := ReflectTypeToEinoType(stringType)
 	if einoStringType != schema.String {
@@ -29,6 +30,7 @@ func TestReflectTypeToEinoType(
 func TestCreateToolParamList(
 	t *testing.T,
 ) {
+	t.Parallel()
 	resultData := textresult.TextError{}
 	paramPrompts := prompts.TextResultParam
 	data, errCreate := CreateToolParams(
@@ -58,6 +60,7 @@ func TestCreateToolParamList(
 
 // TestInterface tests whether it implements tool interfacce
 func TestInterface(t *testing.T) {
+	t.Parallel()
 	var resultToolTest any = NewProvideResultTool("114514")
 	_, ok := resultToolTest.(tool.InvokableTool)
 	if !ok {

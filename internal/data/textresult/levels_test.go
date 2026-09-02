@@ -8,6 +8,7 @@ import (
 func TestToInt(
 	t *testing.T,
 ) {
+	t.Parallel()
 	r1, _ := Warning.ToInt()
 	if r1 != 0 {
 		t.Errorf(

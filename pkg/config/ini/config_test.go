@@ -6,6 +6,7 @@ import (
 
 // Test Initialization
 func TestInitialization(t *testing.T) {
+	t.Parallel()
 	NewConfig := newConfigManager(
 		true,
 		"testdata/test.ini",
@@ -27,6 +28,7 @@ func TestInitialization(t *testing.T) {
 
 // Test GetConfigString
 func TestConfigString(t *testing.T) {
+	t.Parallel()
 	NewConfig := newConfigManager(
 		true,
 		"testdata/test.ini",
@@ -53,6 +55,7 @@ func TestConfigString(t *testing.T) {
 
 // Test the fillEmpty function
 func TestFillEmpty(t *testing.T) {
+	t.Parallel()
 	NewConfig := newConfigManager(
 		true,
 		"testdata/test.ini",
@@ -80,6 +83,7 @@ func TestFillEmpty(t *testing.T) {
 
 // Test the config setting
 func TestSetConfig(t *testing.T) {
+	t.Parallel()
 	NewConfig := newConfigManager(
 		true,
 		"testdata/test.ini",

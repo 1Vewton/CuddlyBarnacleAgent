@@ -12,6 +12,7 @@ const (
 func TestTipsPrompts(
 	t *testing.T,
 ) {
+	t.Parallel()
 	newTipsList := []string{
 		"abc",
 	}
