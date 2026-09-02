@@ -55,8 +55,8 @@ func NewTaskFromFile(
 	return newTask, err
 }
 
-// GetTaskName generates task name
-func (task *Task) GetTaskName(
+// GetFileName generates file name
+func (task *Task) GetFileName(
 	taskDir string,
 ) string {
 	return fmt.Sprintf(
@@ -68,23 +68,31 @@ func (task *Task) GetTaskName(
 	)
 }
 
+// GetTaskID gets the task id
+func (task *Task) GetTaskID() string {
+	task.RLock()
+	defer task.RUnlock()
+	result := task.TaskID
+	return result
+}
+
 // SaveFile saves the task to json file
 func (task *Task) SaveFile(
 	taskDir string,
-) error {
+) (string, error) {
 	task.RLock()
 	defer task.RUnlock()
 	data, err := json.Marshal(task)
 	if err != nil {
-		return err
+		return "", err
 	}
-	fileName := task.GetTaskName(taskDir)
+	fileName := task.GetFileName(taskDir)
 	err = os.WriteFile(
 		fileName,
 		data,
 		0644,
 	)
-	return err
+	return fileName, err
 }
 
 // AddSingleProblem adds single problem to the Task

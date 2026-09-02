@@ -45,3 +45,30 @@ func TestTask(t *testing.T) {
 		)
 	}
 }
+
+// TestFileOperation tests the load and saving of task
+func TestFileOperation(t *testing.T) {
+	t.Parallel()
+	tmpDir := t.TempDir()
+	newTask := NewTask(
+		"test",
+		"1919810",
+	)
+	fileName, err := newTask.SaveFile(tmpDir)
+	if err != nil {
+		t.Error(err)
+	}
+	reloadedTask, err := NewTaskFromFile(
+		fileName,
+	)
+	if err != nil {
+		t.Error(err)
+	}
+	if reloadedTask.GetTaskID() != newTask.GetTaskID() {
+		t.Errorf(
+			"expected %s, got %s",
+			newTask.GetTaskID(),
+			reloadedTask.GetTaskID(),
+		)
+	}
+}
