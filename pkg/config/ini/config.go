@@ -153,6 +153,24 @@ func (cfg *ConfigStruct) GetEmbeddingChunkSize() (int, error) {
 	)
 }
 
+// GetDataDir gets the directory to store datas
+func (cfg *ConfigStruct) GetDataDir() string {
+	return cfg.cfg.GetConfigString(
+		"Application",
+		"DataDir",
+		"datas",
+	)
+}
+
+// GetTaskManagerFile gets the directory to store datas
+func (cfg *ConfigStruct) GetTaskManagerFile() string {
+	return cfg.cfg.GetConfigString(
+		"Application",
+		"TaskManagementFileDir",
+		"task_manager",
+	)
+}
+
 // ShowAllConfig shows all the config used in CLI
 func (cfg *ConfigStruct) ShowAllConfig() {
 	header := color.New(color.FgBlue, color.Bold)

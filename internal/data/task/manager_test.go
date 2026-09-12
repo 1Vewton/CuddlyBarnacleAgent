@@ -100,4 +100,18 @@ func TestAddQuestions(
 			len(allProblems),
 		)
 	}
+	allProblems, err = newManager.GetAllProblemsFor(
+		"1",
+		agenttypes.GrammaticalCheck,
+	)
+	if err != nil {
+		t.Error(err)
+	}
+	if len(allProblems) != 1 {
+		t.Errorf(
+			"expected length of allProblems to be %d, got %d",
+			1,
+			len(allProblems),
+		)
+	}
 }

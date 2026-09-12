@@ -39,6 +39,8 @@ func (cfg *configManager) InitializeConfig() error {
 		applicationSettingsSection := cfg.config.Section("Application")
 		applicationSettingsSection.NewKey("Language", "English")
 		applicationSettingsSection.NewKey("TextSplitMethod", Recursive.ToString())
+		applicationSettingsSection.NewKey("DataDir", "datas")
+		applicationSettingsSection.NewKey("TaskManagementFileDir", "task_manager")
 		llmSettingsSection := cfg.config.Section("LLM")
 		llmSettingsSection.NewKey("LLMModelName", "YOUR_MODEL_NAME")
 		llmSettingsSection.NewKey("LLMAPIKey", "YOUR_API_KEY")

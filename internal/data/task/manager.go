@@ -6,6 +6,7 @@ import (
 	"os"
 	"sync"
 
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/agenttypes"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/textresult"
 )
 
@@ -60,11 +61,21 @@ func (manager *Manager) Load(
 		if err != nil {
 			return err
 		}
+		err = os.MkdirAll(
+			fileDir,
+			0644,
+		)
+		if err != nil {
+			return err
+		}
 		err = os.WriteFile(
 			path,
 			data,
 			0644,
 		)
+		if err != nil {
+			return err
+		}
 	} else if err == nil {
 		data, err := os.ReadFile(path)
 		if err != nil {
@@ -172,4 +183,30 @@ func (manager *Manager) AddQuestion(
 	}
 	manager.Data[taskName] = storedFileName
 	return nil
+}
+
+// GetAllProblemsForTask gets all problems for certain task
+func (manager *Manager) GetAllProblemsFor(
+	taskName string,
+	proposer agenttypes.AgentType,
+) ([]*textresult.StoredTextError, error) {
+	manager.RLock()
+	defer manager.RUnlock()
+	fileName, exists := manager.Data[taskName]
+	if !exists {
+		return nil, fmt.Errorf(
+			"%s not exists",
+			taskName,
+		)
+	}
+	task, err := NewTaskFromFile(
+		fileName,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return task.GetAllProblemsFor(
+		proposer,
+	), nil
 }
