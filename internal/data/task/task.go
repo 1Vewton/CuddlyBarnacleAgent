@@ -62,7 +62,7 @@ func (task *Task) GetFileName(
 	return fmt.Sprintf(
 		"%s/%s_%d_%s.json",
 		taskDir,
-		task.ArticleID,
+		task.TaskID,
 		task.CreateTime.Nanosecond(),
 		task.ArticleID,
 	)
