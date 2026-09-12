@@ -185,7 +185,7 @@ func (manager *Manager) AddQuestion(
 	return nil
 }
 
-// GetAllProblemsForTask gets all problems for certain task
+// GetAllProblemsFor gets all problems for certain task
 func (manager *Manager) GetAllProblemsFor(
 	taskName string,
 	proposer agenttypes.AgentType,
