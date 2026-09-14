@@ -36,6 +36,15 @@ func CopyFileTo(
 		targetFileName,
 		suffix,
 	)
+	_, err = os.Stat(
+		targetFilePath,
+	)
+	if os.IsExist(err) {
+		return targetFilePath, fmt.Errorf(
+			"%s already exists",
+			targetFilePath,
+		)
+	}
 	err = os.WriteFile(
 		targetFilePath,
 		data,
