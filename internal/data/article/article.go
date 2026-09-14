@@ -1,35 +1,16 @@
 package article
 
-import (
-	"fmt"
-	"os"
-	"path/filepath"
-)
+// SingleArticle defines the data structure for storing a single article
+type SingleArticle struct {
+	Lines          []string `json:"lines"`
+	Title          string   `json:"title"`
+	PreviewLine    string   `json:"preview_line"`
+	TargetFilePath string   `json:"target_file_path"`
+}
 
-// CopyFileTo copies certain file to target directory
-func CopyFileTo(
-	originalFilePath string,
-	targetFileName string,
-	targetDirName string,
-) (string, error) {
-	data, err := os.ReadFile(originalFilePath)
-	if err != nil {
-		return "", err
-	}
-	suffix := filepath.Ext(originalFilePath)
-	targetFilePath := fmt.Sprintf(
-		"%s/%s.%s",
-		targetDirName,
-		targetFileName,
-		suffix,
-	)
-	err = os.WriteFile(
-		targetFilePath,
-		data,
-		0644,
-	)
-	if err != nil {
-		return targetFilePath, err
-	}
-	return targetFilePath, nil
+// CreateNewSingleArticle creates new single article
+func CreateNewSingleArticle(
+	filePath string,
+) (*SingleArticle, error) {
+	return nil, nil
 }
