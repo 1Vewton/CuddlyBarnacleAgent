@@ -8,13 +8,13 @@ import (
 )
 
 // ArticleUploadConfig defines the struct for uploading article
-type ArticleUploadConfig struct {
+type UploadConfig struct {
 	ArticleManager *Manager
 	VectorDB       *vectordb.VectorDB
 }
 
 // UploadArticle uploads single article
-func (cfg *ArticleUploadConfig) UploadArticle(
+func (cfg *UploadConfig) UploadArticle(
 	ctx context.Context,
 	originalFilePath string,
 	targetDirPath string,
