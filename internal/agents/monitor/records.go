@@ -3,6 +3,8 @@ package monitor
 import (
 	"errors"
 	"sync"
+
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/agenttypes"
 )
 
 // FailureRecord records failure
@@ -44,20 +46,25 @@ func NewFailureRecordFromError(
 	return record, nil
 }
 
+// SuccessRecord defines the record for success
+type SuccessRecord struct {
+	ToolName string
+}
+
 // SingleAgentRecord defines the recorded data for single agent
 type SingleAgentRecord struct {
 	sync.RWMutex
-	TotalCalls   int
-	TotalSuccess int
-	Failures     []*FailureRecord
+	TotalCalls int
+	Failures   []*FailureRecord
+	Successes  []*SuccessRecord
 }
 
 // NewSingleAgentRecord creates new Record
 func NewSingleAgentRecord() *SingleAgentRecord {
 	return &SingleAgentRecord{
-		TotalCalls:   0,
-		TotalSuccess: 0,
-		Failures:     []*FailureRecord{},
+		TotalCalls: 0,
+		Failures:   []*FailureRecord{},
+		Successes:  []*SuccessRecord{},
 	}
 }
 
@@ -69,10 +76,15 @@ func (record *SingleAgentRecord) NewCall() {
 }
 
 // CallSuccess records that the call for the tool is successed
-func (record *SingleAgentRecord) CallSuccess() {
+func (record *SingleAgentRecord) CallSuccess(
+	toolName string,
+) {
 	record.Lock()
 	defer record.Unlock()
-	record.TotalSuccess++
+	newSuccess := &SuccessRecord{
+		ToolName: toolName,
+	}
+	record.Successes = append(record.Successes, newSuccess)
 }
 
 // GetTotalCalls gets total calls
@@ -87,6 +99,12 @@ func (record *SingleAgentRecord) GetTotalCalls() int {
 func (record *SingleAgentRecord) GetSuccessCalls() int {
 	record.RLock()
 	defer record.RUnlock()
-	result := record.TotalSuccess
+	result := len(record.Successes)
 	return result
+}
+
+// AgentsRecord records performance of all agents
+type AgentsRecord struct {
+	sync.RWMutex
+	AgentsData map[string]agenttypes.AgentType
 }

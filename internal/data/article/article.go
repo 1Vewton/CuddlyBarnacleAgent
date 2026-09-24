@@ -3,12 +3,15 @@ package article
 import (
 	"fmt"
 	"os"
+	"slices"
+	"sync"
 
 	"github.com/1Vewton/CuddlyBarnacleAgent/pkg/osoperation"
 )
 
 // SingleArticle defines the data structure for storing a single article
 type SingleArticle struct {
+	sync.RWMutex
 	Lines          []string `json:"lines"`
 	Title          string   `json:"title"`
 	PreviewLine    string   `json:"preview_line"`
@@ -56,6 +59,8 @@ func CreateNewSingleArticle(
 
 // Reload reloads the file from the single article
 func (article *SingleArticle) Reload() error {
+	article.Lock()
+	defer article.Unlock()
 	_, err := os.Stat(article.TargetFilePath)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -74,4 +79,22 @@ func (article *SingleArticle) Reload() error {
 	}
 	article.Lines = lines
 	return nil
+}
+
+// GetLines gets line stored in a single article
+func (article *SingleArticle) GetLines() []string {
+	article.RLock()
+	defer article.RUnlock()
+	result := slices.Clone(
+		article.Lines,
+	)
+	return result
+}
+
+// GetTitle gets tje title stored in a single article
+func (article *SingleArticle) GetTitle() string {
+	article.RLock()
+	defer article.RUnlock()
+	result := article.Title
+	return result
 }

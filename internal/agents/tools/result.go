@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/monitor"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/prompts"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/textresult"
 	"github.com/cloudwego/eino/components/tool"
@@ -12,7 +13,8 @@ import (
 
 // ProvideResultTool provides result
 type ProvideResultTool struct {
-	taskName string
+	taskName     string
+	agentMonitor *monitor.AgentsRecord
 }
 
 // NewProvideResultTool creates new ProvideResultTool

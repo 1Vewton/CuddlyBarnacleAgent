@@ -17,11 +17,11 @@ func TestArticleFromFile(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if newArticle.Title != "README" {
+	if newArticle.GetTitle() != "README" {
 		t.Errorf(
 			"expected title of the article to be %s, got %s",
 			"README",
-			newArticle.Title,
+			newArticle.GetTitle(),
 		)
 	}
 }

@@ -5,6 +5,7 @@ import (
 	"runtime"
 
 	"github.com/1Vewton/CuddlyBarnacleAgent/pkg/config/settings"
+	"github.com/google/uuid"
 	"github.com/philippgille/chromem-go"
 )
 
@@ -32,6 +33,13 @@ func NewVectorDB(
 		dbPath:         dbPath,
 		collectionName: collectionName,
 	}
+}
+
+// SetEmbeddingFunc sets the embedding function
+func (vDB *VectorDB) SetEmbeddingFunc(
+	embeddingFunc chromem.EmbeddingFunc,
+) {
+	vDB.embeddingFunc = embeddingFunc
 }
 
 // InitializeDB initializes a vector databse
@@ -74,12 +82,46 @@ func (vDB *VectorDB) Query(
 	ctx context.Context,
 	queryNum int,
 	text string,
+	title *string,
 ) ([]chromem.Result, error) {
+	var queryMetadata map[string]string
+	if title == nil {
+		queryMetadata = nil
+	} else {
+		queryMetadata = map[string]string{
+			"title": *title,
+		}
+	}
 	return vDB.collection.Query(
 		ctx,
 		text,
 		queryNum,
-		nil,
+		queryMetadata,
 		nil,
 	)
+}
+
+// UploadArticleByLines uploads the article by lines
+func (vDB *VectorDB) UploadArticleByLines(
+	ctx context.Context,
+	lines []string,
+	title string,
+) error {
+	resultDocuments := []chromem.Document{}
+	for _, line := range lines {
+		id := uuid.NewString()
+		tmpDocument := chromem.Document{
+			ID:      id,
+			Content: line,
+			Metadata: map[string]string{
+				"title": title,
+			},
+		}
+		resultDocuments = append(resultDocuments, tmpDocument)
+	}
+	err := vDB.UploadDocuments(
+		ctx,
+		resultDocuments,
+	)
+	return err
 }
