@@ -7,7 +7,7 @@ import (
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/vectordb"
 )
 
-// ArticleUploadConfig defines the struct for uploading article
+// UploadConfig defines the struct for uploading article
 type UploadConfig struct {
 	ArticleManager *Manager
 	VectorDB       *vectordb.VectorDB
