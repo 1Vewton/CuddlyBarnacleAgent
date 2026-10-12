@@ -61,9 +61,9 @@ func TestCreateToolParamList(
 // TestInterface tests whether it implements tool interfacce
 func TestInterface(t *testing.T) {
 	t.Parallel()
-	var resultToolTest any = NewProvideResultTool("114514")
+	var resultToolTest any = NewProposeProblemTool("114514")
 	_, ok := resultToolTest.(tool.InvokableTool)
 	if !ok {
-		t.Error("ProvideResultTool does not implement invokable tool")
+		t.Error("ProposeProblemTool does not implement invokable tool")
 	}
 }

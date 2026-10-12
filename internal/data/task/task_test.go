@@ -27,8 +27,9 @@ func TestTask(t *testing.T) {
 		},
 	}
 	newTask := NewTask("TestTask", "114514")
+	// Add
 	newTask.AddMultipleProblems(testData)
-	result := newTask.GetAllProblemsFor(agenttypes.GrammaticalCheck)
+	result, _ := newTask.GetAllProblemsFor(agenttypes.GrammaticalCheck)
 	length := len(result)
 	if length != 1 {
 		t.Errorf(
@@ -43,6 +44,22 @@ func TestTask(t *testing.T) {
 			1919810,
 			result[0].Line,
 		)
+	}
+	err := newTask.DeleteProblem(
+		1,
+		agenttypes.FactualCheck,
+	)
+	if err == nil {
+		t.Error(
+			"expected to throw an error here",
+		)
+	}
+	err = newTask.DeleteProblem(
+		1,
+		agenttypes.GrammaticalCheck,
+	)
+	if err != nil {
+		t.Error(err)
 	}
 }
 

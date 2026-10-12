@@ -206,7 +206,8 @@ func (manager *Manager) GetAllProblemsFor(
 		return nil, err
 	}
 
-	return task.GetAllProblemsFor(
+	result, _ := task.GetAllProblemsFor(
 		proposer,
-	), nil
+	)
+	return result, nil
 }

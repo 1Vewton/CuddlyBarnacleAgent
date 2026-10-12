@@ -11,23 +11,23 @@ import (
 	"github.com/cloudwego/eino/schema"
 )
 
-// ProvideResultTool provides result
-type ProvideResultTool struct {
+// ProposeProblemTool provides result
+type ProposeProblemTool struct {
 	taskName     string
 	agentMonitor *monitor.AgentsRecord
 }
 
-// NewProvideResultTool creates new ProvideResultTool
-func NewProvideResultTool(
+// NewProposeProblemTool creates new ProposeProblemTool
+func NewProposeProblemTool(
 	taskName string,
-) *ProvideResultTool {
-	return &ProvideResultTool{
+) *ProposeProblemTool {
+	return &ProposeProblemTool{
 		taskName: taskName,
 	}
 }
 
 // Info gives information for this tool
-func (t *ProvideResultTool) Info(
+func (t *ProposeProblemTool) Info(
 	ctx context.Context,
 ) (*schema.ToolInfo, error) {
 	expSchema := textresult.TextError{}
@@ -45,8 +45,8 @@ func (t *ProvideResultTool) Info(
 		prompts.TextErrorArrayDescription,
 	)
 	return &schema.ToolInfo{
-		Name: prompts.ProvideResultToolName,
-		Desc: "Provides result to the user",
+		Name: prompts.ProposeProblemToolName,
+		Desc: "Propose problems you find in the article",
 		ParamsOneOf: schema.NewParamsOneOfByParams(
 			map[string]*schema.ParameterInfo{
 				"Array": paramSchema,
@@ -61,18 +61,18 @@ func (t *ProvideResultTool) Info(
 }
 
 // InvokableRun runs the provides result tool
-func (t *ProvideResultTool) InvokableRun(
+func (t *ProposeProblemTool) InvokableRun(
 	ctx context.Context,
 	argumentsInJSON string,
 	opts ...tool.Option,
 ) (string, error) {
 	var inputs []textresult.TextError
-	errUnmarshal := json.Unmarshal(
+	err := json.Unmarshal(
 		[]byte(argumentsInJSON),
 		&inputs,
 	)
-	if errUnmarshal != nil {
-		return "", nil
+	if err != nil {
+		return "", err
 	}
 	return "", nil
 }

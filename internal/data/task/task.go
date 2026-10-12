@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"slices"
 	"sync"
 	"time"
 
@@ -114,17 +115,56 @@ func (task *Task) AddMultipleProblems(
 	}
 }
 
-// GetAllProblemsFor gets the all tasks proposed by certain agent
+// GetAllProblemsFor gets the all problems proposed by certain agent.
+// Also returns the indexes of the returned problems.
 func (task *Task) GetAllProblemsFor(
 	agentType agenttypes.AgentType,
-) []*textresult.StoredTextError {
+) ([]*textresult.StoredTextError, []int) {
 	task.RLock()
 	defer task.RUnlock()
 	result := []*textresult.StoredTextError{}
-	for _, task := range task.Problems {
+	resultIdx := []int{}
+	for i, task := range task.Problems {
 		if agentType == task.Proposer {
 			result = append(result, task)
+			resultIdx = append(resultIdx, i)
 		}
 	}
-	return result
+	return result, resultIdx
+}
+
+// DeleteProblem deletes problem
+func (task *Task) DeleteProblem(
+	idx int,
+	agentType agenttypes.AgentType,
+) error {
+	task.Lock()
+	defer task.Unlock()
+	if idx >= len(task.Problems) {
+		return fmt.Errorf(
+			"%d idx not exists",
+			idx,
+		)
+	}
+	if task.Problems[idx].Proposer != agentType {
+		return fmt.Errorf(
+			"the proposer of problem %d is not %s",
+			idx,
+			agentType.ToString(),
+		)
+	}
+	result := slices.Delete(
+		task.Problems,
+		idx,
+		idx+1,
+	)
+	task.Problems = result
+	return nil
+}
+
+// OverWrite overwrites the problems proposed by certain agent
+func (task *Task) OverWrite(
+	agentType agenttypes.AgentType,
+) {
+
 }

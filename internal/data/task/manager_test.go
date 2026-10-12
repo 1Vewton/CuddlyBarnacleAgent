@@ -90,7 +90,7 @@ func TestAddQuestions(
 	if err != nil {
 		t.Error(err)
 	}
-	allProblems := task.GetAllProblemsFor(
+	allProblems, _ := task.GetAllProblemsFor(
 		agenttypes.GrammaticalCheck,
 	)
 	if len(allProblems) != 1 {

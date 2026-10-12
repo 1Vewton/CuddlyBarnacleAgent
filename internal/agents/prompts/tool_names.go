@@ -1,6 +1,6 @@
 package prompts
 
 const (
-	// ProvideResultToolName defines the name for provide result tool
-	ProvideResultToolName string = "provide_result"
+	// ProposeProblemToolName defines the name for provide result tool
+	ProposeProblemToolName string = "propose_problem"
 )

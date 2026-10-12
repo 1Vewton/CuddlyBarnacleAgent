@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"slices"
+	"strconv"
 	"sync"
 
 	"github.com/1Vewton/CuddlyBarnacleAgent/pkg/osoperation"
@@ -96,5 +97,22 @@ func (article *SingleArticle) GetTitle() string {
 	article.RLock()
 	defer article.RUnlock()
 	result := article.Title
+	return result
+}
+
+// ShowLines shows the line to agents
+func (article *SingleArticle) ShowLines() string {
+	article.RLock()
+	defer article.RUnlock()
+	result := ""
+	for i, line := range article.Lines {
+		s := strconv.Itoa(i + 1)
+		result += s
+		result += " "
+		result += line
+		if i != len(article.Lines)-1 {
+			result += "\n"
+		}
+	}
 	return result
 }

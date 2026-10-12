@@ -13,3 +13,19 @@ const (
 	// TotalCheck checks for results of other checks
 	TotalCheck
 )
+
+// ToString converts the AgentType to string
+func (agentType AgentType) ToString() string {
+	switch agentType {
+	case GrammaticalCheck:
+		return "GrammaticalCheck"
+	case LogicalCheck:
+		return "LogicalCheck"
+	case FactualCheck:
+		return "FactualCheck"
+	case TotalCheck:
+		return "TotalCheck"
+	default:
+		return "NotSupported"
+	}
+}
