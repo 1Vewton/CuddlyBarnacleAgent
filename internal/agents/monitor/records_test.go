@@ -1,6 +1,7 @@
 package monitor
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/agenttypes"
@@ -48,15 +49,44 @@ func TestAgentsRecord(t *testing.T) {
 		agenttypes.FactualCheck,
 		"test_tool",
 	)
+	newRecord.NewCall(agenttypes.GrammaticalCheck)
+	newRecord.AddFailureRecordByDetail(
+		agenttypes.GrammaticalCheck,
+		"test_tool",
+		errors.New(
+			"this is a test error",
+		),
+		"Hello, World!",
+	)
 	// Check data
-	totalCalls := newRecord.GetTotalCalls(
+	totalCallsFactualCheck := newRecord.GetTotalCalls(
 		agenttypes.FactualCheck,
 	)
-	if totalCalls != 3 {
+	if totalCallsFactualCheck != 3 {
 		t.Errorf(
 			"expected total calls to be %d, got %d",
 			3,
-			totalCalls,
+			totalCallsFactualCheck,
+		)
+	}
+	totalSuccessCallsFactualCheck := newRecord.GetSuccessfulCalls(
+		agenttypes.FactualCheck,
+	)
+	if totalSuccessCallsFactualCheck != 2 {
+		t.Errorf(
+			"expected total successful calls to be %d, got %d",
+			2,
+			totalSuccessCallsFactualCheck,
+		)
+	}
+	totalFailureCallsFactualCheck := newRecord.GetFailedCalls(
+		agenttypes.FactualCheck,
+	)
+	if totalFailureCallsFactualCheck != 1 {
+		t.Errorf(
+			"expected total failed calls to be %d, got %d",
+			1,
+			totalSuccessCallsFactualCheck,
 		)
 	}
 }
