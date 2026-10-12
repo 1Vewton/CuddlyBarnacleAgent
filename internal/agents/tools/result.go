@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/agenttypes"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/monitor"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/prompts"
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/task"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/textresult"
 	"github.com/cloudwego/eino/components/tool"
 	"github.com/cloudwego/eino/schema"
@@ -14,15 +16,23 @@ import (
 // ProposeProblemTool provides result
 type ProposeProblemTool struct {
 	taskName     string
+	agentType    agenttypes.AgentType
 	agentMonitor *monitor.AgentsRecord
+	taskManager  *task.Manager
 }
 
 // NewProposeProblemTool creates new ProposeProblemTool
 func NewProposeProblemTool(
 	taskName string,
+	agentType agenttypes.AgentType,
+	agentMonitor *monitor.AgentsRecord,
+	taskManager *task.Manager,
 ) *ProposeProblemTool {
 	return &ProposeProblemTool{
-		taskName: taskName,
+		taskName:     taskName,
+		agentType:    agentType,
+		agentMonitor: agentMonitor,
+		taskManager:  taskManager,
 	}
 }
 
@@ -60,12 +70,15 @@ func (t *ProposeProblemTool) Info(
 	}, nil
 }
 
-// InvokableRun runs the provides result tool
+// InvokableRun runs the propose problem tool
 func (t *ProposeProblemTool) InvokableRun(
 	ctx context.Context,
 	argumentsInJSON string,
 	opts ...tool.Option,
 ) (string, error) {
+	t.agentMonitor.NewCall(
+		t.agentType,
+	)
 	var inputs []textresult.TextError
 	err := json.Unmarshal(
 		[]byte(argumentsInJSON),
@@ -74,5 +87,16 @@ func (t *ProposeProblemTool) InvokableRun(
 	if err != nil {
 		return "", err
 	}
+	storedProblems, err := textresult.MultipleRawToProcessed(
+		inputs,
+		t.agentType,
+	)
+	if err != nil {
+		return "", err
+	}
+	t.taskManager.AddQuestion(
+		t.taskName,
+		storedProblems,
+	)
 	return "", nil
 }

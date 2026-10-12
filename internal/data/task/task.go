@@ -162,9 +162,30 @@ func (task *Task) DeleteProblem(
 	return nil
 }
 
-// OverWrite overwrites the problems proposed by certain agent
+// OverWrite overwrites one problem proposed by certain agent
 func (task *Task) OverWrite(
+	idx int,
 	agentType agenttypes.AgentType,
-) {
-
+	problem *textresult.StoredTextError,
+) error {
+	task.Lock()
+	defer task.Unlock()
+	if idx > len(task.Problems) {
+		return fmt.Errorf(
+			"%d is out of range (0-%d)",
+			idx,
+			len(task.Problems),
+		)
+	}
+	for i := range task.Problems {
+		if idx == i {
+			if task.Problems[idx].Proposer != agentType {
+				return fmt.Errorf(
+					"the proposer fo the original question is %s, not you",
+					task.Problems[idx].Proposer.ToString(),
+				)
+			}
+		}
+	}
+	return nil
 }
