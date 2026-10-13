@@ -41,6 +41,7 @@ func (cfg *configManager) InitializeConfig() error {
 		applicationSettingsSection.NewKey("TextSplitMethod", Recursive.ToString())
 		applicationSettingsSection.NewKey("DataDir", "datas")
 		applicationSettingsSection.NewKey("TaskManagementFileDir", "task_manager")
+		applicationSettingsSection.NewKey("MonitorFileDir", "monitor")
 		llmSettingsSection := cfg.config.Section("LLM")
 		llmSettingsSection.NewKey("LLMModelName", "YOUR_MODEL_NAME")
 		llmSettingsSection.NewKey("LLMAPIKey", "YOUR_API_KEY")
@@ -57,6 +58,10 @@ func (cfg *configManager) InitializeConfig() error {
 		}
 		// Fill the empty fields
 		cfg.fillEmpty("Application", "Language", "English")
+		cfg.fillEmpty("Application", "TextSplitMethod", Recursive.ToString())
+		cfg.fillEmpty("Application", "DataDir", "datas")
+		cfg.fillEmpty("Application", "TaskManagementFileDir", "task_manager")
+		cfg.fillEmpty("Application", "MonitorFileDir", "monitor")
 		cfg.fillEmpty("LLM", "LLMModelName", "YOUR_MODEL_NAME")
 		cfg.fillEmpty("LLM", "LLMAPIKey", "YOUR_API_KEY")
 		cfg.fillEmpty("LLM", "LLMBaseURL", "YOUR_BASE_URL")

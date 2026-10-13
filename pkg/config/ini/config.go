@@ -171,6 +171,15 @@ func (cfg *ConfigStruct) GetTaskManagerFile() string {
 	)
 }
 
+// GetMonitorFile gets the directory to store monitor data
+func (cfg *ConfigStruct) GetMonitorFile() string {
+	return cfg.cfg.GetConfigString(
+		"Application",
+		"MonitorFileDir",
+		"monitor",
+	)
+}
+
 // ShowAllConfig shows all the config used in CLI
 func (cfg *ConfigStruct) ShowAllConfig() {
 	header := color.New(color.FgBlue, color.Bold)

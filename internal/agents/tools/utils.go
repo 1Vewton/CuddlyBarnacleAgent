@@ -5,6 +5,8 @@ import (
 	"reflect"
 
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents"
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/agenttypes"
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/monitor"
 	"github.com/1Vewton/CuddlyBarnacleAgent/pkg/datastruct"
 	"github.com/cloudwego/eino/schema"
 )
@@ -92,4 +94,28 @@ func CreateListParam(
 			SubParams: subparams,
 		},
 	}
+}
+
+// ProcessMonitorError with tool error
+func ProcessMonitorError(
+	thisMonitor *monitor.AgentsRecord,
+	agentType agenttypes.AgentType,
+	toolName string,
+	errInfo error,
+	agentInput string,
+) error {
+	err := thisMonitor.AddFailureCallWithDetailWithSave(
+		agentType,
+		errInfo,
+		toolName,
+		agentInput,
+	)
+	if err != nil {
+		return fmt.Errorf(
+			"the tool throws an error %s, the monitor also throws an error %s",
+			errInfo,
+			err,
+		)
+	}
+	return errInfo
 }

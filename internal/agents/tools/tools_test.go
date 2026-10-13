@@ -1,9 +1,12 @@
 package tools
 
 import (
+	"errors"
 	"reflect"
 	"testing"
 
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/agenttypes"
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/monitor"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/prompts"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/textresult"
 	"github.com/cloudwego/eino/components/tool"
@@ -65,5 +68,38 @@ func TestInterface(t *testing.T) {
 	_, ok := resultToolTest.(tool.InvokableTool)
 	if !ok {
 		t.Error("ProposeProblemTool does not implement invokable tool")
+	}
+}
+
+// TestProcessMonitorError tests the process monitor error
+func TestProcessMonitorError(t *testing.T) {
+	t.Parallel()
+	const errorText string = "This is a test error"
+	monitor1 := monitor.NewAgentsRecord()
+	tmpDir := t.TempDir()
+	monitor1.Load(
+		tmpDir,
+		"test.json",
+	)
+	err := ProcessMonitorError(
+		monitor1,
+		agenttypes.FactualCheck,
+		"test_tool",
+		errors.New(
+			errorText,
+		),
+		"{}",
+	)
+	if err == nil {
+		t.Error(
+			"expected to throw an error here",
+		)
+	}
+	if err.Error() != errorText {
+		t.Errorf(
+			"expected returned error to be %s, got %s",
+			errorText,
+			err.Error(),
+		)
 	}
 }

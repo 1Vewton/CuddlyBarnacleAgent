@@ -31,7 +31,7 @@ func (record *AgentsRecord) Load(
 	record.Lock()
 	defer record.Unlock()
 	filePath := fmt.Sprintf(
-		"%s/%s",
+		"%s/%s.json",
 		fileDir,
 		fileName,
 	)
@@ -259,6 +259,23 @@ func (record *AgentsRecord) AddFailureCallWithSave(
 	record.AddFailureCall(
 		agentType,
 		toolName,
+	)
+	err := record.SaveFile()
+	return err
+}
+
+// AddFailureCallWithDetailWithSave adds failure record with detail and saves the file
+func (record *AgentsRecord) AddFailureCallWithDetailWithSave(
+	agentType agenttypes.AgentType,
+	errInfo error,
+	toolName string,
+	agentInput string,
+) error {
+	record.AddFailureCallByDetail(
+		agentType,
+		toolName,
+		errInfo,
+		agentInput,
 	)
 	err := record.SaveFile()
 	return err

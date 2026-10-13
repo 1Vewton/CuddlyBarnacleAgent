@@ -27,7 +27,7 @@ func TestSingleAgentRecord(t *testing.T) {
 func TestAgentsRecord(t *testing.T) {
 	t.Parallel()
 	const toolName string = "test_tool"
-	const fileName string = "test.json"
+	const fileName string = "test"
 	tmpDir := t.TempDir()
 	newRecord := NewAgentsRecord()
 	err := newRecord.Load(
@@ -175,6 +175,24 @@ func TestAgentsRecord(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	err = newRecord2.NewCallWithSave(
+		agenttypes.FactualCheck,
+		toolName,
+	)
+	if err != nil {
+		t.Error(err)
+	}
+	err = newRecord2.AddFailureCallWithDetailWithSave(
+		agenttypes.FactualCheck,
+		errors.New(
+			"it is a test",
+		),
+		toolName,
+		"{}",
+	)
+	if err != nil {
+		t.Error(err)
+	}
 	newRecord3 := NewAgentsRecord()
 	err = newRecord3.Load(
 		tmpDir,
@@ -186,10 +204,10 @@ func TestAgentsRecord(t *testing.T) {
 	totalCalls := newRecord3.GetTotalCalls(
 		agenttypes.FactualCheck,
 	)
-	if totalCalls != 5 {
+	if totalCalls != 6 {
 		t.Errorf(
 			"expected number of calls to be %d, got %d",
-			5,
+			6,
 			totalCalls,
 		)
 	}
