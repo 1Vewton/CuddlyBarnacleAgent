@@ -19,6 +19,7 @@ type ProposeProblemTool struct {
 	agentType    agenttypes.AgentType
 	agentMonitor *monitor.AgentsRecord
 	taskManager  *task.Manager
+	toolName     string
 }
 
 // NewProposeProblemTool creates new ProposeProblemTool
@@ -33,6 +34,7 @@ func NewProposeProblemTool(
 		agentType:    agentType,
 		agentMonitor: agentMonitor,
 		taskManager:  taskManager,
+		toolName:     prompts.ProposeProblemToolName,
 	}
 }
 
@@ -55,7 +57,7 @@ func (t *ProposeProblemTool) Info(
 		prompts.TextErrorArrayDescription,
 	)
 	return &schema.ToolInfo{
-		Name: prompts.ProposeProblemToolName,
+		Name: t.toolName,
 		Desc: "Propose problems you find in the article",
 		ParamsOneOf: schema.NewParamsOneOfByParams(
 			map[string]*schema.ParameterInfo{
@@ -78,6 +80,7 @@ func (t *ProposeProblemTool) InvokableRun(
 ) (string, error) {
 	t.agentMonitor.NewCall(
 		t.agentType,
+		t.toolName,
 	)
 	var inputs []textresult.TextError
 	err := json.Unmarshal(

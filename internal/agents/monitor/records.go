@@ -5,6 +5,11 @@ import (
 	"sync"
 )
 
+// NormalRecord records normal call
+type NormalRecord struct {
+	ToolName string
+}
+
 // FailureRecord records failure
 type FailureRecord struct {
 	Reason     string
@@ -52,7 +57,7 @@ type SuccessRecord struct {
 // SingleAgentRecord defines the recorded data for single agent
 type SingleAgentRecord struct {
 	sync.RWMutex
-	TotalCalls int
+	TotalCalls []*NormalRecord
 	Failures   []*FailureRecord
 	Successes  []*SuccessRecord
 }
@@ -60,17 +65,22 @@ type SingleAgentRecord struct {
 // NewSingleAgentRecord creates new Record
 func NewSingleAgentRecord() *SingleAgentRecord {
 	return &SingleAgentRecord{
-		TotalCalls: 0,
+		TotalCalls: []*NormalRecord{},
 		Failures:   []*FailureRecord{},
 		Successes:  []*SuccessRecord{},
 	}
 }
 
 // NewCall adds total calls
-func (record *SingleAgentRecord) NewCall() {
+func (record *SingleAgentRecord) NewCall(
+	toolName string,
+) {
 	record.Lock()
 	defer record.Unlock()
-	record.TotalCalls++
+	newCall := &NormalRecord{
+		ToolName: toolName,
+	}
+	record.TotalCalls = append(record.TotalCalls, newCall)
 }
 
 // CallSuccess records the circumstance that the call for the tool is successed
@@ -117,7 +127,7 @@ func (record *SingleAgentRecord) CallFail(
 func (record *SingleAgentRecord) GetTotalCalls() int {
 	record.RLock()
 	defer record.RUnlock()
-	result := record.TotalCalls
+	result := len(record.TotalCalls)
 	return result
 }
 

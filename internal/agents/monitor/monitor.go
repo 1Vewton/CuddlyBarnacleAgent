@@ -13,6 +13,7 @@ import (
 type AgentsRecord struct {
 	sync.RWMutex
 	AgentsData map[agenttypes.AgentType]*SingleAgentRecord
+	filePath   string
 }
 
 // NewAgentsRecord creates new agent record
@@ -34,6 +35,7 @@ func (record *AgentsRecord) Load(
 		fileDir,
 		fileName,
 	)
+	record.filePath = filePath
 	_, err := os.Stat(filePath)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -76,13 +78,16 @@ func (record *AgentsRecord) Load(
 // fillEmpty fills empty in map in found
 func (record *AgentsRecord) fillEmpty(
 	agentType agenttypes.AgentType,
+	toolName string,
 	needsAddRecord bool,
 ) {
 	data, exists := record.AgentsData[agentType]
 	if !exists || data == nil {
 		record.AgentsData[agentType] = NewSingleAgentRecord()
 		if needsAddRecord {
-			record.AgentsData[agentType].NewCall()
+			record.AgentsData[agentType].NewCall(
+				toolName,
+			)
 		}
 	}
 }
@@ -90,14 +95,18 @@ func (record *AgentsRecord) fillEmpty(
 // NewCall calls when a new tool call is executed by agent
 func (record *AgentsRecord) NewCall(
 	agentType agenttypes.AgentType,
+	toolName string,
 ) {
 	record.Lock()
 	defer record.Unlock()
 	record.fillEmpty(
 		agentType,
+		toolName,
 		false,
 	)
-	record.AgentsData[agentType].NewCall()
+	record.AgentsData[agentType].NewCall(
+		toolName,
+	)
 }
 
 // AddSuccessCall adds new success call record
@@ -109,6 +118,7 @@ func (record *AgentsRecord) AddSuccessCall(
 	defer record.Unlock()
 	record.fillEmpty(
 		agentType,
+		toolName,
 		true,
 	)
 	record.AgentsData[agentType].CallSuccess(
@@ -116,8 +126,8 @@ func (record *AgentsRecord) AddSuccessCall(
 	)
 }
 
-// AddFailureRecord adds new failure record
-func (record *AgentsRecord) AddFailureRecord(
+// AddFailureCall adds new failure call
+func (record *AgentsRecord) AddFailureCall(
 	agentType agenttypes.AgentType,
 	toolName string,
 ) {
@@ -125,6 +135,7 @@ func (record *AgentsRecord) AddFailureRecord(
 	defer record.Unlock()
 	record.fillEmpty(
 		agentType,
+		toolName,
 		true,
 	)
 	record.AgentsData[agentType].CallFail(
@@ -132,8 +143,8 @@ func (record *AgentsRecord) AddFailureRecord(
 	)
 }
 
-// AddFailureRecordByDetail adds new failure record in detail
-func (record *AgentsRecord) AddFailureRecordByDetail(
+// AddFailureCallByDetail adds new failure call in detail
+func (record *AgentsRecord) AddFailureCallByDetail(
 	agentType agenttypes.AgentType,
 	toolName string,
 	errInfo error,
@@ -143,6 +154,7 @@ func (record *AgentsRecord) AddFailureRecordByDetail(
 	defer record.Unlock()
 	record.fillEmpty(
 		agentType,
+		toolName,
 		true,
 	)
 	record.AgentsData[agentType].DetailedCallFail(
@@ -160,6 +172,7 @@ func (record *AgentsRecord) GetTotalCalls(
 	defer record.RUnlock()
 	record.fillEmpty(
 		agentType,
+		"N/A",
 		false,
 	)
 	result := record.AgentsData[agentType].GetTotalCalls()
@@ -174,6 +187,7 @@ func (record *AgentsRecord) GetSuccessfulCalls(
 	defer record.RUnlock()
 	record.fillEmpty(
 		agentType,
+		"N/A",
 		false,
 	)
 	result := record.AgentsData[agentType].GetSuccessCalls()
@@ -188,8 +202,64 @@ func (record *AgentsRecord) GetFailedCalls(
 	defer record.RUnlock()
 	record.fillEmpty(
 		agentType,
+		"N/A",
 		false,
 	)
 	result := record.AgentsData[agentType].GetFailedCalls()
 	return result
+}
+
+// SaveFile saves the file
+func (record *AgentsRecord) SaveFile() error {
+	record.Lock()
+	defer record.Unlock()
+	data, err := json.Marshal(record)
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(
+		record.filePath,
+		data,
+		0644,
+	)
+	return err
+}
+
+// NewCallWithSave adds new call and saves the file
+func (record *AgentsRecord) NewCallWithSave(
+	agentType agenttypes.AgentType,
+	toolName string,
+) error {
+	record.NewCall(
+		agentType,
+		toolName,
+	)
+	err := record.SaveFile()
+	return err
+}
+
+// AddSuccessCallWithSave adds successful call and saves the file
+func (record *AgentsRecord) AddSuccessCallWithSave(
+	agentType agenttypes.AgentType,
+	toolName string,
+) error {
+	record.AddSuccessCall(
+		agentType,
+		toolName,
+	)
+	err := record.SaveFile()
+	return err
+}
+
+// AddFailureCallWithSave adds calls that will fail and saves the file
+func (record *AgentsRecord) AddFailureCallWithSave(
+	agentType agenttypes.AgentType,
+	toolName string,
+) error {
+	record.AddFailureCall(
+		agentType,
+		toolName,
+	)
+	err := record.SaveFile()
+	return err
 }
