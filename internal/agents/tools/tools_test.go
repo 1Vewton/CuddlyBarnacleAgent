@@ -103,3 +103,35 @@ func TestProcessMonitorError(t *testing.T) {
 		)
 	}
 }
+
+// TestShowError tests the error showing
+func TestShowError(t *testing.T) {
+	t.Parallel()
+	const expectedString string = `{"crucial_error": "ttsc"}`
+	resultString := ShowError(
+		errors.New("ttsc"),
+	)
+	if resultString != expectedString {
+		t.Errorf(
+			"expected %s, got %s",
+			expectedString,
+			resultString,
+		)
+	}
+	const expectedString2 string = `{"crucial_error": "unknown error occurs"}`
+	resultString2 := ShowError(
+		nil,
+	)
+	if resultString2 != expectedString2 {
+		t.Errorf(
+			"expected %s, got %s",
+			expectedString2,
+			resultString2,
+		)
+	}
+}
+
+// TestProposeProblemTool tests the tool to propose problem
+func TestProposeProblemTool(t *testing.T) {
+	t.Parallel()
+}
