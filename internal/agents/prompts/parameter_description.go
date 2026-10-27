@@ -1,4 +1,4 @@
-package agents
+package prompts
 
 // ParameterDescription describes a parameter
 type ParameterDescription struct {
