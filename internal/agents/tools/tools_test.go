@@ -1,6 +1,7 @@
 package tools
 
 import (
+	"encoding/json"
 	"errors"
 	"reflect"
 	"testing"
@@ -8,6 +9,7 @@ import (
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/agenttypes"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/monitor"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/prompts"
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/task"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/textresult"
 	"github.com/cloudwego/eino/components/tool"
 	"github.com/cloudwego/eino/schema"
@@ -131,7 +133,102 @@ func TestShowError(t *testing.T) {
 	}
 }
 
+// TestGiveResult tests the result giving
+func TestGiveResult(t *testing.T) {
+	t.Parallel()
+	// Give success result
+	defintion := "test definition"
+	const value int = 0
+	expectedResult := &BaseProcessResult{
+		Success: true,
+		Message: "tool execution succeed",
+		Data: &DataWithDefinition{
+			Value:      value,
+			Definition: &defintion,
+		},
+	}
+	expectedInfo, err := json.Marshal(expectedResult)
+	if err != nil {
+		t.Fatal(err)
+	}
+	resultInfo := GiveSuccessResult(
+		&defintion,
+		value,
+	)
+	if string(expectedInfo) != resultInfo {
+		t.Errorf(
+			"expectec %s, got %s",
+			string(expectedInfo),
+			resultInfo,
+		)
+	}
+	// Give failed result
+	testErr := errors.New(
+		"this is just a test",
+	)
+	expectedErrResult := &BaseProcessResult{
+		Success: false,
+		Message: testErr.Error(),
+		Data:    nil,
+	}
+	byteData, err := json.Marshal(expectedErrResult)
+	if err != nil {
+		t.Fatal(err)
+	}
+	failedResult := GiveFailResult(testErr)
+	if string(byteData) != failedResult {
+		t.Fatalf(
+			"expected %s, got %s",
+			string(byteData),
+			failedResult,
+		)
+	}
+}
+
 // TestProposeProblemTool tests the tool to propose problem
 func TestProposeProblemTool(t *testing.T) {
 	t.Parallel()
+	const taskName string = "taskA"
+	// Initialize data needed
+	tmpDir := t.TempDir()
+	testMonitor := monitor.NewAgentsRecord()
+	testManager := task.NewManager(
+		tmpDir,
+		"test.json",
+	)
+	err := testManager.AddTask(
+		taskName,
+		"test",
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Create tool
+	proposeProblemTool := NewProposeProblemTool(
+		taskName,
+		agenttypes.FactualCheck,
+		testMonitor,
+		testManager,
+	)
+	// Checks if this tool is a invokable tool
+	var testTool interface{} = proposeProblemTool
+	_, ok := testTool.(tool.InvokableTool)
+	if !ok {
+		t.Errorf(
+			"it is not an invokable tool",
+		)
+	}
+	// inputs
+	level, err := textresult.Error.ToInt()
+	if err != nil {
+		t.Fatal(err)
+	}
+	testInputs := []textresult.TextError{
+		{
+			Level: level,
+		},
+	}
+	json.Marshal(
+		testInputs,
+	)
 }

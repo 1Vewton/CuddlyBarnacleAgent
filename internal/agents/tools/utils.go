@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/agenttypes"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/monitor"
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/prompts"
 	"github.com/1Vewton/CuddlyBarnacleAgent/pkg/datastruct"
 	"github.com/cloudwego/eino/schema"
 )
@@ -45,7 +45,7 @@ func NewParam(
 
 // CreateToolParams creates param list for tool
 func CreateToolParams(
-	params map[string]agents.ParameterDescription,
+	params map[string]prompts.ParameterDescription,
 	data any,
 ) (map[string]*schema.ParameterInfo, error) {
 	result := make(map[string]*schema.ParameterInfo)

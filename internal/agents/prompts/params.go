@@ -1,9 +1,5 @@
 package prompts
 
-import (
-	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents"
-)
-
 const (
 	lineDescription  string = "The position of the error"
 	levelDescription string = `
@@ -19,7 +15,7 @@ The type of the problem.
 )
 
 // TextResultParam defines the param of text result
-var TextResultParam = map[string]agents.ParameterDescription{
+var TextResultParam = map[string]ParameterDescription{
 	"Line": {
 		Description: lineDescription,
 		Required:    true,
