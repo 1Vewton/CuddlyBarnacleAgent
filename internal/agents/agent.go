@@ -35,7 +35,7 @@ type AgentConfig struct {
 // ToolsList defines list of tools
 type ToolsList struct {
 	sync.RWMutex
-	tools []tool.BaseTool
+	Tools []tool.BaseTool
 }
 
 // NewToolsList creates new tools list
@@ -45,13 +45,13 @@ func NewToolsList() *ToolsList {
 
 // AddTool adds new tool to it, the data must be invokable tool
 func (toolsList *ToolsList) AddTool(
-	newTools []tool.InvokableTool,
+	newTools ...tool.InvokableTool,
 ) {
 	toolsList.Lock()
 	defer toolsList.Unlock()
 	for _, tool := range newTools {
-		toolsList.tools = append(
-			toolsList.tools,
+		toolsList.Tools = append(
+			toolsList.Tools,
 			tool,
 		)
 	}
@@ -77,7 +77,7 @@ func NewAgent(
 			Model:       baseModel,
 			ToolsConfig: adk.ToolsConfig{
 				ToolsNodeConfig: compose.ToolsNodeConfig{
-					Tools: toolsList.tools,
+					Tools: toolsList.Tools,
 				},
 			},
 		},

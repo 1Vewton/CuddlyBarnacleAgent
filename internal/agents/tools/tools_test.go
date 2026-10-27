@@ -188,15 +188,24 @@ func TestGiveResult(t *testing.T) {
 // TestProposeProblemTool tests the tool to propose problem
 func TestProposeProblemTool(t *testing.T) {
 	t.Parallel()
-	const taskName string = "taskA"
 	// Initialize data needed
+	ctx := t.Context()
+	const taskName string = "taskA"
 	tmpDir := t.TempDir()
 	testMonitor := monitor.NewAgentsRecord()
-	testManager := task.NewManager(
+	testMonitor.Load(
 		tmpDir,
-		"test.json",
+		"monitor.json",
 	)
-	err := testManager.AddTask(
+	testManager := task.NewRawManager()
+	err := testManager.Load(
+		tmpDir,
+		"manager.json",
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = testManager.AddTask(
 		taskName,
 		"test",
 	)
@@ -225,10 +234,76 @@ func TestProposeProblemTool(t *testing.T) {
 	}
 	testInputs := []textresult.TextError{
 		{
-			Level: level,
+			Level:  level,
+			Type:   textresult.UncategorizedError.ToInt(),
+			Line:   100,
+			Reason: "test1",
+		},
+		{
+			Level:  level,
+			Type:   textresult.UncategorizedError.ToInt(),
+			Line:   102,
+			Reason: "test2",
 		},
 	}
-	json.Marshal(
+	byteData, err := json.Marshal(
 		testInputs,
 	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	result, err := proposeProblemTool.InvokableRun(
+		ctx,
+		string(byteData),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var proposeProblemResult *BaseProcessResult
+	err = json.Unmarshal(
+		[]byte(result),
+		&proposeProblemResult,
+	)
+	if err != nil {
+		t.Fatalf(
+			"error occurred: %s, data: %s",
+			err.Error(),
+			result,
+		)
+	}
+	if !proposeProblemResult.Success {
+		t.Fatal(
+			"tool execution failed",
+		)
+	}
+	totalCalls := testMonitor.GetTotalCalls(
+		agenttypes.FactualCheck,
+	)
+	if totalCalls != 1 {
+		t.Fatalf(
+			"expected total calls to be %d, got %d",
+			1,
+			totalCalls,
+		)
+	}
+	successCalls := testMonitor.GetSuccessfulCalls(
+		agenttypes.FactualCheck,
+	)
+	if successCalls != 1 {
+		t.Fatalf(
+			"expected the successful calls count to be %d, got %d",
+			1,
+			successCalls,
+		)
+	}
+	failedCalls := testMonitor.GetFailedCalls(
+		agenttypes.FactualCheck,
+	)
+	if failedCalls != 0 {
+		t.Errorf(
+			"expected the failed calls count to be %d, got %d",
+			0,
+			failedCalls,
+		)
+	}
 }

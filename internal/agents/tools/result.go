@@ -90,7 +90,9 @@ func (t *ProposeProblemTool) InvokableRun(
 			err,
 			argumentsInJSON,
 		)
-		return "", err
+		return GiveFailResult(
+			err,
+		), err
 	}
 	var inputs []textresult.TextError
 	err = json.Unmarshal(
@@ -105,7 +107,9 @@ func (t *ProposeProblemTool) InvokableRun(
 			err,
 			argumentsInJSON,
 		)
-		return "", err
+		return GiveFailResult(
+			err,
+		), err
 	}
 	storedProblems, err := textresult.MultipleRawToProcessed(
 		inputs,
@@ -119,7 +123,9 @@ func (t *ProposeProblemTool) InvokableRun(
 			err,
 			argumentsInJSON,
 		)
-		return "", err
+		return GiveFailResult(
+			err,
+		), err
 	}
 	err = t.taskManager.AddQuestion(
 		t.taskName,
@@ -133,11 +139,34 @@ func (t *ProposeProblemTool) InvokableRun(
 			err,
 			argumentsInJSON,
 		)
-		return "", err
+		return GiveFailResult(
+			err,
+		), err
+	}
+	err = t.taskManager.SaveFile()
+	if err != nil {
+		err = ProcessMonitorError(
+			t.agentMonitor,
+			t.agentType,
+			t.toolName,
+			err,
+			argumentsInJSON,
+		)
+		return GiveFailResult(
+			err,
+		), err
 	}
 	err = t.agentMonitor.AddSuccessCallWithSave(
 		t.agentType,
 		t.toolName,
 	)
-	return "", err
+	if err != nil {
+		return GiveFailResult(
+			err,
+		), err
+	}
+	return GiveSuccessResult(
+		nil,
+		nil,
+	), nil
 }
