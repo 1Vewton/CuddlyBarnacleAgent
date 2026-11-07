@@ -12,6 +12,14 @@ type TextError struct {
 	Reason string
 }
 
+// DisplayTextError defines an error for displaying
+type DisplayTextError struct {
+	Level  string
+	Reason string
+	Type   string
+	Line   int
+}
+
 // ListResult defines the list of errors
 type ListResult struct {
 	Array                 []TextError
@@ -25,6 +33,16 @@ type StoredTextError struct {
 	Line     int
 	Reason   string
 	Proposer agenttypes.AgentType
+}
+
+// ForDisplay converts stored text error to display
+func (stored *StoredTextError) ForDisplay() *DisplayTextError {
+	return &DisplayTextError{
+		Level:  stored.Level.ToString(),
+		Reason: stored.Reason,
+		Type:   stored.Type.ToString(),
+		Line:   stored.Line,
+	}
 }
 
 // FromRawToProcessed process the basic text error
@@ -57,6 +75,20 @@ func MultipleRawToProcessed(
 			return nil, err
 		}
 		result = append(result, processedData)
+	}
+	return result, nil
+}
+
+// FromStoredToDisplay converts from stored to datas for displaying
+func FromStoredToDisplay(
+	storedDatas []*StoredTextError,
+) ([]*DisplayTextError, error) {
+	result := []*DisplayTextError{}
+	for _, stored := range storedDatas {
+		result = append(
+			result,
+			stored.ForDisplay(),
+		)
 	}
 	return result, nil
 }

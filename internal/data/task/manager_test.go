@@ -80,6 +80,7 @@ func TestAddQuestions(
 	err = newManager.AddQuestion(
 		"1",
 		testData,
+		false,
 	)
 	if err != nil {
 		t.Error(err)

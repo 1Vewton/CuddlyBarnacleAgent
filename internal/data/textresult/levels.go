@@ -58,3 +58,17 @@ func ToLevels(
 		)
 	}
 }
+
+// ToString converts levels to string
+func (level Levels) ToString() string {
+	switch level {
+	case Error:
+		return "Error"
+	case Warning:
+		return "Warning"
+	case NotSupported:
+		return "Not Supported"
+	default:
+		return "Unknown"
+	}
+}

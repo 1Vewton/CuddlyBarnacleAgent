@@ -13,6 +13,12 @@ import (
 	"github.com/cloudwego/eino/schema"
 )
 
+// ProposeProblemToolInput defines the input for tool that provides result
+type ProposeProblemToolInput struct {
+	Array                 []textresult.TextError
+	OverWriteOriginalData bool
+}
+
 // ProposeProblemTool provides result
 type ProposeProblemTool struct {
 	taskName     string
@@ -58,7 +64,7 @@ func (t *ProposeProblemTool) Info(
 	)
 	return &schema.ToolInfo{
 		Name: t.toolName,
-		Desc: "Propose problems you find in the article",
+		Desc: prompts.ProposeProblemToolDescription,
 		ParamsOneOf: schema.NewParamsOneOfByParams(
 			map[string]*schema.ParameterInfo{
 				"Array": paramSchema,
@@ -94,7 +100,7 @@ func (t *ProposeProblemTool) InvokableRun(
 			err,
 		), err
 	}
-	var inputs []textresult.TextError
+	var inputs *ProposeProblemToolInput
 	err = json.Unmarshal(
 		[]byte(argumentsInJSON),
 		&inputs,
@@ -112,7 +118,7 @@ func (t *ProposeProblemTool) InvokableRun(
 		), err
 	}
 	storedProblems, err := textresult.MultipleRawToProcessed(
-		inputs,
+		inputs.Array,
 		t.agentType,
 	)
 	if err != nil {
@@ -130,6 +136,7 @@ func (t *ProposeProblemTool) InvokableRun(
 	err = t.taskManager.AddQuestion(
 		t.taskName,
 		storedProblems,
+		inputs.OverWriteOriginalData,
 	)
 	if err != nil {
 		err = ProcessMonitorError(

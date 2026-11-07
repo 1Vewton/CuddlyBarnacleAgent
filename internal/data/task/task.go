@@ -189,3 +189,10 @@ func (task *Task) OverWrite(
 	}
 	return nil
 }
+
+// OverWriteAll defines the function for overwriting all problems
+func (task *Task) OverWriteAll(
+	problems []*textresult.StoredTextError,
+) error {
+	return nil
+}

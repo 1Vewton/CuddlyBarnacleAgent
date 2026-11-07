@@ -156,6 +156,7 @@ func (manager *Manager) GetTask(
 func (manager *Manager) AddQuestion(
 	taskName string,
 	problems []*textresult.StoredTextError,
+	overwrite bool,
 ) error {
 	manager.RLock()
 	defer manager.RUnlock()
@@ -172,9 +173,15 @@ func (manager *Manager) AddQuestion(
 	if err != nil {
 		return err
 	}
-	task.AddMultipleProblems(
-		problems,
-	)
+	if !overwrite {
+		task.AddMultipleProblems(
+			problems,
+		)
+	} else {
+		task.OverWriteAll(
+			problems,
+		)
+	}
 	storedFileName, err := task.SaveFile(
 		manager.taskDir,
 	)
