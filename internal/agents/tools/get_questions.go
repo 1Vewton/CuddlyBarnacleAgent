@@ -32,7 +32,7 @@ func NewGetProblemsTool(
 		agentType:   agentType,
 		monitor:     monitor,
 		taskManager: taskManager,
-		toolName:    prompts.GetProblemsTool,
+		toolName:    prompts.GetProblemsToolName,
 	}
 }
 
@@ -42,7 +42,7 @@ func (t *GetProblemsTool) Info(
 ) (*schema.ToolInfo, error) {
 	return &schema.ToolInfo{
 		Name: t.toolName,
-		Desc: prompts.GetProblemsTool,
+		Desc: prompts.GetProblemsToolDescription,
 	}, nil
 }
 
