@@ -193,12 +193,15 @@ func TestProposeProblemTool(t *testing.T) {
 	const taskName string = "taskA"
 	tmpDir := t.TempDir()
 	testMonitor := monitor.NewAgentsRecord()
-	testMonitor.Load(
+	err := testMonitor.Load(
 		tmpDir,
 		"monitor.json",
 	)
+	if err != nil {
+		t.Fatal(err)
+	}
 	testManager := task.NewRawManager()
-	err := testManager.Load(
+	err = testManager.Load(
 		tmpDir,
 		"manager.json",
 	)
@@ -232,19 +235,22 @@ func TestProposeProblemTool(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	testInputs := []textresult.TextError{
-		{
-			Level:  level,
-			Type:   textresult.UncategorizedError.ToInt(),
-			Line:   100,
-			Reason: "test1",
+	testInputs := &ProposeProblemToolInput{
+		Array: []textresult.TextError{
+			{
+				Level:  level,
+				Type:   textresult.UncategorizedError.ToInt(),
+				Line:   100,
+				Reason: "test1",
+			},
+			{
+				Level:  level,
+				Type:   textresult.UncategorizedError.ToInt(),
+				Line:   102,
+				Reason: "test2",
+			},
 		},
-		{
-			Level:  level,
-			Type:   textresult.UncategorizedError.ToInt(),
-			Line:   102,
-			Reason: "test2",
-		},
+		OverWriteOriginalData: false,
 	}
 	byteData, err := json.Marshal(
 		testInputs,
@@ -306,4 +312,12 @@ func TestProposeProblemTool(t *testing.T) {
 			failedCalls,
 		)
 	}
+}
+
+// TestGetProblemsTool tests getting the problems
+func TestGetProblemsTool(t *testing.T) {
+	t.Parallel()
+	// Prepare datas
+	const taskName string = "testTask"
+	monitor.NewAgentsRecord()
 }

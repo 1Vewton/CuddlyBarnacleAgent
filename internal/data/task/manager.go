@@ -154,6 +154,7 @@ func (manager *Manager) GetTask(
 
 // AddQuestion adds question to it
 func (manager *Manager) AddQuestion(
+	agentType agenttypes.AgentType,
 	taskName string,
 	problems []*textresult.StoredTextError,
 	overwrite bool,
@@ -180,6 +181,7 @@ func (manager *Manager) AddQuestion(
 	} else {
 		task.OverWriteAll(
 			problems,
+			agentType,
 		)
 	}
 	storedFileName, err := task.SaveFile(

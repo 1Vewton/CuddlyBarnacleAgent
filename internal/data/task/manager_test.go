@@ -78,6 +78,7 @@ func TestAddQuestions(
 		t.Error(err)
 	}
 	err = newManager.AddQuestion(
+		agenttypes.GrammaticalCheck,
 		"1",
 		testData,
 		false,

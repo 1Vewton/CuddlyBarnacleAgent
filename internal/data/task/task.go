@@ -2,9 +2,9 @@ package task
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
-	"slices"
 	"sync"
 	"time"
 
@@ -153,12 +153,10 @@ func (task *Task) DeleteProblem(
 			agentType.ToString(),
 		)
 	}
-	result := slices.Delete(
-		task.Problems,
-		idx,
-		idx+1,
+	task.Problems = append(
+		task.Problems[:idx],
+		task.Problems[idx+1:]...,
 	)
-	task.Problems = result
 	return nil
 }
 
@@ -190,9 +188,43 @@ func (task *Task) OverWrite(
 	return nil
 }
 
+// DeleteAllProblemsFor deletes all problems for an agent type
+func (task *Task) DeleteAllProblemsFor(
+	agentType agenttypes.AgentType,
+) error {
+	task.Lock()
+	defer task.Unlock()
+	if task.Problems == nil {
+		return errors.New(
+			"the problems list is nil",
+		)
+	}
+	for i, problem := range task.Problems {
+		if problem == nil {
+			return fmt.Errorf(
+				"problem list %d is nil",
+				i,
+			)
+		}
+		if problem.Proposer == agentType {
+			task.Problems = append(
+				task.Problems[:i],
+				task.Problems[i+1:]...,
+			)
+		}
+	}
+	return nil
+}
+
 // OverWriteAll defines the function for overwriting all problems
 func (task *Task) OverWriteAll(
 	problems []*textresult.StoredTextError,
+	agentType agenttypes.AgentType,
 ) error {
+	err := task.DeleteAllProblemsFor(agentType)
+	if err != nil {
+		return err
+	}
+	task.AddMultipleProblems(problems)
 	return nil
 }

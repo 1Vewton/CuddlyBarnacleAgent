@@ -89,3 +89,72 @@ func TestFileOperation(t *testing.T) {
 		)
 	}
 }
+
+// TestCRUD tests the CRUD of task
+func TestCRUD(t *testing.T) {
+	t.Parallel()
+	newTask := NewTask(
+		"taskA",
+		"114514",
+	)
+	newTask.AddMultipleProblems(
+		[]*textresult.StoredTextError{
+			{
+				Level:    textresult.Error,
+				Type:     textresult.UncategorizedError,
+				Proposer: agenttypes.GrammaticalCheck,
+				Line:     314,
+				Reason:   "test",
+			},
+			{
+				Level:    textresult.Error,
+				Type:     textresult.UncategorizedError,
+				Proposer: agenttypes.GrammaticalCheck,
+				Line:     320,
+				Reason:   "test",
+			},
+			{
+				Level:    textresult.Error,
+				Type:     textresult.UncategorizedError,
+				Proposer: agenttypes.FactualCheck,
+				Line:     320,
+				Reason:   "test",
+			},
+			{
+				Level:    textresult.Error,
+				Type:     textresult.UncategorizedError,
+				Proposer: agenttypes.FactualCheck,
+				Line:     320,
+				Reason:   "test",
+			},
+		},
+	)
+	err := newTask.DeleteAllProblemsFor(
+		agenttypes.GrammaticalCheck,
+	)
+	if err != nil {
+		fetchedProblems, _ := newTask.GetAllProblemsFor(
+			agenttypes.FactualCheck,
+		)
+		t.Error(fetchedProblems)
+		t.Fatal(err)
+	}
+	fetchedProblems, _ := newTask.GetAllProblemsFor(
+		agenttypes.FactualCheck,
+	)
+	if len(fetchedProblems) != 2 {
+		t.Fatalf(
+			"expected length of the fetched data to be %d, got %d",
+			2,
+			len(fetchedProblems),
+		)
+	}
+	for i, fetchedProblem := range fetchedProblems {
+		if fetchedProblem.Proposer == agenttypes.GrammaticalCheck {
+			t.Fatalf(
+				"%d expected to get deleted",
+				i,
+			)
+		}
+	}
+}

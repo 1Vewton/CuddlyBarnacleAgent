@@ -134,6 +134,7 @@ func (t *ProposeProblemTool) InvokableRun(
 		), err
 	}
 	err = t.taskManager.AddQuestion(
+		t.agentType,
 		t.taskName,
 		storedProblems,
 		inputs.OverWriteOriginalData,

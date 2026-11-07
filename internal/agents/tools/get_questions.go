@@ -68,9 +68,33 @@ func (t *GetProblemsTool) InvokableRun(
 			err,
 		), err
 	}
-	t.taskManager.GetAllProblemsFor(
+	proposedProblems, err := t.taskManager.GetAllProblemsFor(
 		t.taskName,
 		t.agentType,
 	)
-	return "", nil
+	if err != nil {
+		err = ProcessMonitorError(
+			t.monitor,
+			t.agentType,
+			t.toolName,
+			err,
+			argumentsInJSON,
+		)
+		return GiveFailResult(
+			err,
+		), err
+	}
+	err = t.monitor.AddSuccessCallWithSave(
+		t.agentType,
+		t.toolName,
+	)
+	if err != nil {
+		return GiveFailResult(
+			err,
+		), err
+	}
+	return GiveSuccessResult(
+		&prompts.FetchedProblemsDefinition,
+		proposedProblems,
+	), nil
 }
