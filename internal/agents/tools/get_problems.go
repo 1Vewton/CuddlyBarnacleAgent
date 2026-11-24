@@ -7,6 +7,7 @@ import (
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/monitor"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/prompts"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/task"
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/textresult"
 	"github.com/cloudwego/eino/components/tool"
 	"github.com/cloudwego/eino/schema"
 )
@@ -84,6 +85,21 @@ func (t *GetProblemsTool) InvokableRun(
 			err,
 		), err
 	}
+	result, err := textresult.FromStoredToDisplay(
+		proposedProblems,
+	)
+	if err != nil {
+		err = ProcessMonitorError(
+			t.monitor,
+			t.agentType,
+			t.toolName,
+			err,
+			argumentsInJSON,
+		)
+		return GiveFailResult(
+			err,
+		), err
+	}
 	err = t.monitor.AddSuccessCallWithSave(
 		t.agentType,
 		t.toolName,
@@ -93,8 +109,9 @@ func (t *GetProblemsTool) InvokableRun(
 			err,
 		), err
 	}
+	definition := "{}"
 	return GiveSuccessResult(
-		&prompts.FetchedProblemsDefinition,
-		proposedProblems,
+		&definition,
+		result,
 	), nil
 }

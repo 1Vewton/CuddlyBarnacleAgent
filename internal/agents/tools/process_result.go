@@ -2,6 +2,7 @@ package tools
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 )
 
@@ -22,6 +23,20 @@ func ShowError(
 	)
 }
 
+// IsResultError shows whether result is a crucial error
+func IsResultError(
+	data string,
+) bool {
+	if len(data) <= 19 {
+		return false
+	}
+	firstPart := data[:19]
+	if firstPart != `{"crucial_error": ` {
+		return false
+	}
+	return true
+}
+
 // DataWithDefinition defines data with definition
 type DataWithDefinition struct {
 	Value      any     `json:"value"`
@@ -30,9 +45,9 @@ type DataWithDefinition struct {
 
 // BaseProcessResult defines the basic process result
 type BaseProcessResult struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
-	Data    any    `json:"data"`
+	Success bool                `json:"success"`
+	Message string              `json:"message"`
+	Data    *DataWithDefinition `json:"data"`
 }
 
 // GiveSuccessResult gives the success result directly
@@ -79,4 +94,21 @@ func GiveFailResult(
 		)
 	}
 	return string(data)
+}
+
+// GetResultInStruct gets the processed result in data struct
+func GetResultInStruct(
+	rawResult string,
+) (*BaseProcessResult, error) {
+	if IsResultError(rawResult) {
+		return nil, errors.New(
+			rawResult,
+		)
+	}
+	var result *BaseProcessResult
+	err := json.Unmarshal(
+		[]byte(rawResult),
+		&result,
+	)
+	return result, err
 }

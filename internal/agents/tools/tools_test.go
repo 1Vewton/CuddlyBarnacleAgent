@@ -318,6 +318,117 @@ func TestProposeProblemTool(t *testing.T) {
 func TestGetProblemsTool(t *testing.T) {
 	t.Parallel()
 	// Prepare datas
+	ctx := t.Context()
+	tmpDir := t.TempDir()
 	const taskName string = "testTask"
-	monitor.NewAgentsRecord()
+	newMonitor := monitor.NewAgentsRecord()
+	err := newMonitor.Load(
+		tmpDir,
+		"monitor.json",
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	newTaskManager := task.NewRawManager()
+	err = newTaskManager.Load(
+		tmpDir,
+		"taskManager.json",
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	testTool := NewProposeProblemTool(
+		taskName,
+		agenttypes.FactualCheck,
+		newMonitor,
+		newTaskManager,
+	)
+	level, err := textresult.Error.ToInt()
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Add task and probelms
+	err = newTaskManager.AddTask(
+		taskName,
+		"114514",
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	testInputs := &ProposeProblemToolInput{
+		Array: []textresult.TextError{
+			{
+				Level:  level,
+				Type:   textresult.UncategorizedError.ToInt(),
+				Line:   100,
+				Reason: "test1",
+			},
+			{
+				Level:  level,
+				Type:   textresult.UncategorizedError.ToInt(),
+				Line:   102,
+				Reason: "test2",
+			},
+		},
+		OverWriteOriginalData: false,
+	}
+	bytesData, err := json.Marshal(testInputs)
+	if err != nil {
+		t.Fatal(err)
+	}
+	res, err := testTool.InvokableRun(
+		ctx,
+		string(bytesData),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	result, err := GetResultInStruct(
+		res,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !result.Success {
+		t.Fatal(
+			result.Message,
+		)
+	}
+	getProblemTool := NewGetProblemsTool(
+		agenttypes.FactualCheck,
+		taskName,
+		newTaskManager,
+		newMonitor,
+	)
+	resultFetchProblems, err := getProblemTool.InvokableRun(
+		ctx,
+		"",
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	resultProcessed, err := GetResultInStruct(
+		resultFetchProblems,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !resultProcessed.Success {
+		t.Fatal(
+			resultProcessed.Message,
+		)
+	}
+	convertedList, ok := resultProcessed.Data.Value.([]any)
+	if !ok {
+		t.Fatal(
+			"failed to convert to slice",
+		)
+	}
+	if len(convertedList) != len(testInputs.Array) {
+		t.Fatalf(
+			"expected length of the data to be %d, got %d",
+			len(testInputs.Array),
+			len(convertedList),
+		)
+	}
 }
