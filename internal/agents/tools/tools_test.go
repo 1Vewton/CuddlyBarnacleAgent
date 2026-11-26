@@ -37,9 +37,20 @@ func TestCreateToolParamList(
 ) {
 	t.Parallel()
 	resultData := textresult.TextError{}
-	paramPrompts := prompts.TextResultParam
+	typeDescription, err := prompts.GetTypeDescription(
+		textresult.AllPublicErrors,
+		[]textresult.ErrorField{
+			textresult.NotCategorized,
+		},
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	paramDescription := prompts.GetTextResultParam(
+		typeDescription,
+	)
 	data, errCreate := CreateToolParams(
-		paramPrompts,
+		paramDescription,
 		resultData,
 	)
 	if errCreate != nil {
@@ -70,6 +81,11 @@ func TestInterface(t *testing.T) {
 	_, ok := resultToolTest.(tool.InvokableTool)
 	if !ok {
 		t.Error("ProposeProblemTool does not implement invokable tool")
+	}
+	var getProblemsToolTest any = &GetProblemsTool{}
+	_, ok = getProblemsToolTest.(tool.InvokableTool)
+	if !ok {
+		t.Error("GetProblemsTool does not implement invokable tool")
 	}
 }
 
@@ -221,6 +237,10 @@ func TestProposeProblemTool(t *testing.T) {
 		agenttypes.FactualCheck,
 		testMonitor,
 		testManager,
+		textresult.AllPublicErrors,
+		[]textresult.ErrorField{
+			textresult.NotCategorized,
+		},
 	)
 	// Checks if this tool is a invokable tool
 	var testTool interface{} = proposeProblemTool
@@ -238,16 +258,16 @@ func TestProposeProblemTool(t *testing.T) {
 	testInputs := &ProposeProblemToolInput{
 		Array: []textresult.TextError{
 			{
-				Level:  level,
-				Type:   textresult.UncategorizedError.ToInt(),
-				Line:   100,
-				Reason: "test1",
+				Level:     level,
+				ErrorCode: 0,
+				Line:      100,
+				Reason:    "test1",
 			},
 			{
-				Level:  level,
-				Type:   textresult.UncategorizedError.ToInt(),
-				Line:   102,
-				Reason: "test2",
+				Level:     level,
+				ErrorCode: 0,
+				Line:      102,
+				Reason:    "test2",
 			},
 		},
 		OverWriteOriginalData: false,
@@ -342,6 +362,10 @@ func TestGetProblemsTool(t *testing.T) {
 		agenttypes.FactualCheck,
 		newMonitor,
 		newTaskManager,
+		textresult.AllPublicErrors,
+		[]textresult.ErrorField{
+			textresult.NotCategorized,
+		},
 	)
 	level, err := textresult.Error.ToInt()
 	if err != nil {
@@ -358,16 +382,16 @@ func TestGetProblemsTool(t *testing.T) {
 	testInputs := &ProposeProblemToolInput{
 		Array: []textresult.TextError{
 			{
-				Level:  level,
-				Type:   textresult.UncategorizedError.ToInt(),
-				Line:   100,
-				Reason: "test1",
+				Level:     level,
+				ErrorCode: 0,
+				Line:      100,
+				Reason:    "test1",
 			},
 			{
-				Level:  level,
-				Type:   textresult.UncategorizedError.ToInt(),
-				Line:   102,
-				Reason: "test2",
+				Level:     level,
+				ErrorCode: 0,
+				Line:      102,
+				Reason:    "test2",
 			},
 		},
 		OverWriteOriginalData: false,

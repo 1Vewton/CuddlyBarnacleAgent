@@ -32,6 +32,7 @@ func TestConvert(t *testing.T) {
 	_, err := MultipleRawToProcessed(
 		testData,
 		agenttypes.FactualCheck,
+		AllPublicErrors,
 	)
 	if err != nil {
 		t.Error(err)

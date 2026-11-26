@@ -6,10 +6,10 @@ import (
 
 // TextError defines an error occurs in the text, including logic and other errors
 type TextError struct {
-	Level  int
-	Type   int
-	Line   int
-	Reason string
+	Level     int
+	ErrorCode int
+	Line      int
+	Reason    string
 }
 
 // DisplayTextError defines an error for displaying
@@ -29,7 +29,7 @@ type ListResult struct {
 // StoredTextError defines the error stored in the program
 type StoredTextError struct {
 	Level    Levels
-	Type     ErrorType
+	Type     *ErrorType
 	Line     int
 	Reason   string
 	Proposer agenttypes.AgentType
@@ -40,7 +40,7 @@ func (stored *StoredTextError) ForDisplay() *DisplayTextError {
 	return &DisplayTextError{
 		Level:  stored.Level.ToString(),
 		Reason: stored.Reason,
-		Type:   stored.Type.ToString(),
+		Type:   stored.Type.Name,
 		Line:   stored.Line,
 	}
 }
@@ -49,14 +49,21 @@ func (stored *StoredTextError) ForDisplay() *DisplayTextError {
 func FromRawToProcessed(
 	rawData TextError,
 	proposer agenttypes.AgentType,
+	errorTypes *AllErrorTypes,
 ) (*StoredTextError, error) {
 	level, err := ToLevels(rawData.Level)
 	if err != nil {
 		return nil, err
 	}
+	errorType, err := errorTypes.GetTypeByErrorCode(
+		rawData.ErrorCode,
+	)
+	if err != nil {
+		return nil, err
+	}
 	return &StoredTextError{
 		Level:    level,
-		Type:     ToErrorType(rawData.Type),
+		Type:     errorType,
 		Line:     rawData.Line,
 		Reason:   rawData.Reason,
 		Proposer: proposer,
@@ -67,10 +74,15 @@ func FromRawToProcessed(
 func MultipleRawToProcessed(
 	rawDatas []TextError,
 	proposer agenttypes.AgentType,
+	errorTypes *AllErrorTypes,
 ) ([]*StoredTextError, error) {
 	result := []*StoredTextError{}
 	for _, data := range rawDatas {
-		processedData, err := FromRawToProcessed(data, proposer)
+		processedData, err := FromRawToProcessed(
+			data,
+			proposer,
+			errorTypes,
+		)
 		if err != nil {
 			return nil, err
 		}

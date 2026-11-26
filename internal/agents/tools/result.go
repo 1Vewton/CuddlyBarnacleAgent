@@ -3,12 +3,14 @@ package tools
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/agenttypes"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/monitor"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/prompts"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/task"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/textresult"
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/operations"
 	"github.com/cloudwego/eino/components/tool"
 	"github.com/cloudwego/eino/schema"
 )
@@ -26,6 +28,8 @@ type ProposeProblemTool struct {
 	agentMonitor *monitor.AgentsRecord
 	taskManager  *task.Manager
 	toolName     string
+	errorTypes   *textresult.AllErrorTypes
+	fields       []textresult.ErrorField
 }
 
 // NewProposeProblemTool creates new ProposeProblemTool
@@ -34,6 +38,8 @@ func NewProposeProblemTool(
 	agentType agenttypes.AgentType,
 	agentMonitor *monitor.AgentsRecord,
 	taskManager *task.Manager,
+	errorTypes *textresult.AllErrorTypes,
+	fields []textresult.ErrorField,
 ) *ProposeProblemTool {
 	return &ProposeProblemTool{
 		taskName:     taskName,
@@ -41,6 +47,8 @@ func NewProposeProblemTool(
 		agentMonitor: agentMonitor,
 		taskManager:  taskManager,
 		toolName:     prompts.ProposeProblemToolName,
+		errorTypes:   errorTypes,
+		fields:       fields,
 	}
 }
 
@@ -49,8 +57,18 @@ func (t *ProposeProblemTool) Info(
 	ctx context.Context,
 ) (*schema.ToolInfo, error) {
 	expSchema := textresult.TextError{}
+	errorTypeDescription, err := prompts.GetTypeDescription(
+		t.errorTypes,
+		t.fields,
+	)
+	if err != nil {
+		return nil, err
+	}
+	paramDescription := prompts.GetTextResultParam(
+		errorTypeDescription,
+	)
 	singleParamSchema, err := CreateToolParams(
-		prompts.TextResultParam,
+		paramDescription,
 		expSchema,
 	)
 	if err != nil {
@@ -120,6 +138,7 @@ func (t *ProposeProblemTool) InvokableRun(
 	storedProblems, err := textresult.MultipleRawToProcessed(
 		inputs.Array,
 		t.agentType,
+		t.errorTypes,
 	)
 	if err != nil {
 		err = ProcessMonitorError(
@@ -132,6 +151,35 @@ func (t *ProposeProblemTool) InvokableRun(
 		return GiveFailResult(
 			err,
 		), err
+	}
+	for _, problem := range storedProblems {
+		typeInfo := problem.Type
+		if typeInfo != nil {
+			typeField, err := t.errorTypes.GetFieldByErrorCode(
+				typeInfo.ErrorCode,
+			)
+			if err != nil {
+				return GiveFailResult(
+					err,
+				), err
+			}
+			isFieldIncluded := operations.IsIncluded(
+				t.fields,
+				typeField,
+				func(f1 textresult.ErrorField, f2 textresult.ErrorField) bool {
+					return f1 == f2
+				},
+			)
+			if !isFieldIncluded {
+				err := fmt.Errorf(
+					"field %d does not supported",
+					typeField,
+				)
+				return GiveFailResult(
+					err,
+				), err
+			}
+		}
 	}
 	err = t.taskManager.AddQuestion(
 		t.agentType,

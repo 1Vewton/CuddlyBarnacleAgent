@@ -7,6 +7,7 @@ import (
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/monitor"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/agents/tools"
 	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/task"
+	"github.com/1Vewton/CuddlyBarnacleAgent/internal/data/textresult"
 )
 
 // TestToolsConfig tests the configuration for tools
@@ -38,6 +39,10 @@ func TestToolsConfig(t *testing.T) {
 			agenttypes.FactualCheck,
 			testMonitor,
 			testManager,
+			textresult.AllPublicErrors,
+			[]textresult.ErrorField{
+				textresult.NotCategorized,
+			},
 		),
 	)
 	if len(testToolList.Tools) != 1 {
