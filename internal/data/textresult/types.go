@@ -61,12 +61,13 @@ func (all *AllErrorTypes) Define(
 	return newErrorType
 }
 
-// AllPulbicErrors defines all the errors for public use
+// AllPublicErrors defines all the errors for public use
 var AllPublicErrors = &AllErrorTypes{
 	ErrorTypes: map[ErrorField][]*ErrorType{},
 }
 
 var (
+	// UncategorizedError defines the error that cannot get categorized
 	UncategorizedError = AllPublicErrors.Define(
 		"uncategorized_error",
 		"error that is not categorized",
