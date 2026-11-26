@@ -55,7 +55,7 @@ func GetTextResultParam(
 			Description: levelDescription,
 			Required:    true,
 		},
-		"Type": {
+		"ErrorCode": {
 			Description: typeDescription,
 			Required:    true,
 		},

@@ -64,9 +64,9 @@ func TestCreateToolParamList(
 	if !ok {
 		t.Error("Expected to have Level field")
 	}
-	_, ok = data["Type"]
+	_, ok = data["ErrorCode"]
 	if !ok {
-		t.Error("Expected to have Type field")
+		t.Error("Expected to have Error Code field")
 	}
 	_, ok = data["Reason"]
 	if !ok {
